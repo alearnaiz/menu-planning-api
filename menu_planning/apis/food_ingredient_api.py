@@ -19,6 +19,6 @@ class FoodIngredientListApi(Resource):
                 quantity = None
             food_ingredient_service.create(food_id=food_id, ingredient_id=ingredient_id, quantity=quantity)
 
-        return 'Ingredients for the food {} updated'.format(food_id), 201
+        return 'Ingredients for the food {} updated'.format(food_id)
 
 api.add_resource(FoodIngredientListApi, '/foods/<int:food_id>/ingredients')

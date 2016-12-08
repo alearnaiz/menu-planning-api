@@ -106,7 +106,7 @@ class MenuApi(Resource):
 
             daily_menu_service.update(daily_menu)
 
-        return 'Menu {} updated'.format(menu_id), 201
+        return 'Menu {} updated'.format(menu_id)
 
 api.add_resource(MenuApi, '/menus/<int:menu_id>')
 

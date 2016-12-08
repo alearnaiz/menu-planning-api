@@ -55,12 +55,12 @@ class ProductApi(Resource):
             abort(400, message='Wrong parameters')
 
         product_service.update(id=product_id, name=name, status=status, quantity=quantity)
-        return 'Product {} updated'.format(product_id), 201
+        return 'Product {} updated'.format(product_id)
 
     def delete(self, product_id):
         product_service = ProductService()
         product_service.delete_by_id(product_id)
-        return 'Product {} deleted'.format(product_id), 201
+        return 'Product {} deleted'.format(product_id)
 
 api.add_resource(ProductApi, '/products/<int:product_id>')
 
