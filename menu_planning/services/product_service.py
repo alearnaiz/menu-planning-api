@@ -14,10 +14,9 @@ class ProductService:
         Product.query.delete()
         db.session.commit()
 
-    def create(self, product):
-        db.session.add(product)
+    def delete_by_id(self, id):
+        Product.query.filter_by(id=id).delete()
         db.session.commit()
-        return product
 
     def create(self, name, status, quantity=None):
         product = Product(name=name, status=status, quantity=quantity)
