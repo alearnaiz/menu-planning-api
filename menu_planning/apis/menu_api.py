@@ -36,6 +36,20 @@ class MenuListApi(Resource):
             menu_generator = MenuGenerator()
             menu = menu_generator.generate(days=days, start_date=start_date, start_lunch=get_boolean(start_lunch),
                                            end_dinner=get_boolean(end_dinner))
+
+            name = request.form.get('name')
+            favourite = request.form.get('favourite')
+
+            if name and favourite:
+                menu_service = MenuService()
+                menu_service.update(menu.id, name=name, favourite=get_boolean(favourite))
+            elif name:
+                menu_service = MenuService()
+                menu_service.update(menu.id, name=name)
+            elif favourite:
+                menu_service = MenuService()
+                menu_service.update(menu.id, favourite=get_boolean(favourite))
+
         except Exception as exception:
             abort(400, message=str(exception))
 
@@ -90,7 +104,7 @@ class MenuApi(Resource):
 
         # Update name and favourite
         name = request.form.get('name')
-        favourite = request.form.get('favourite')
+        favourite = get_boolean(request.form.get('favourite'))
         menu_service.update(menu_id, name=name, favourite=get_checkbox(favourite))
 
         # Update daily menus

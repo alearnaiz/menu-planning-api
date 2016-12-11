@@ -85,7 +85,7 @@ class MenuGenerator:
                     if self.is_dinner_left(current_dinner, num_dinner_days):
                             num_dinner_days += 1
                     elif self.is_mandatory_dinner(current_lunch, menu.id):
-                        current_dinner = self.dinner_service.get_by_id(id=current_lunch.related_dinner_id)
+                        current_dinner = current_lunch.related_dinner
                         num_dinner_days = 1
                     else:
                         current_dinner = self.dinner_generator(menu.id, lunch_days_left, dinner_days_left,

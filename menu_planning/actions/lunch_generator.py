@@ -1,17 +1,15 @@
-from menu_planning.services.dinner_service import DinnerService
 from menu_planning.services.lunch_service import LunchService
 
 
 class LunchGenerator:
 
     def __init__(self, menu_id, lunch_days_left, dinner_days_left, is_dinner_left=False,
-                 lunch_service=LunchService(), dinner_service=DinnerService()):
+                 lunch_service=LunchService()):
         self.menu_id = menu_id
         self.lunch_days_left = lunch_days_left
         self.dinner_days_left = dinner_days_left
         self.is_dinner_left = is_dinner_left
         self.lunch_service = lunch_service
-        self.dinner_service = dinner_service
 
         self.lunch = self.lunch_service.get_random()
 
@@ -25,8 +23,7 @@ class LunchGenerator:
         return not self.is_dinner_left
 
     def has_related_dinner_enough_days(self):
-        dinner = self.dinner_service.get_by_id(id=self.lunch.related_dinner_id)
-        return dinner.days <= self.dinner_days_left
+        return self.lunch.related_dinner.days <= self.dinner_days_left
 
     def is_valid(self):
         if not self.has_enough_days():

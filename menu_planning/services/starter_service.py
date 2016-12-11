@@ -1,5 +1,5 @@
-from menu_planning.models import Starter, DailyMenu
-from sqlalchemy.sql.expression import func, text
+from menu_planning.models import Starter
+from sqlalchemy.sql.expression import func
 
 
 class StarterService:

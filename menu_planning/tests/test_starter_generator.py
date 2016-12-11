@@ -11,7 +11,7 @@ class TestStarterGenerator(unittest.TestCase):
         self.starter_service = StarterService()
 
     def test_valid(self):
-        self.starter_service.get_random = MagicMock(return_value=Starter('Gazpacho'))
+        self.starter_service.get_random = MagicMock(return_value=Starter())
 
         starter_generator = StarterGenerator(starter_service=self.starter_service)
 

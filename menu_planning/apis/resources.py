@@ -7,18 +7,18 @@ class DatetimeFormat(fields.Raw):
 
 starter_fields = {
     'id': fields.Integer,
-    'name': fields.String,
+    'name': fields.String(attribute='food.name'),
 }
 
 dinner_fields = {
     'id': fields.Integer,
-    'name': fields.String,
+    'name': fields.String(attribute='food.name'),
     'days': fields.Integer,
 }
 
 lunch_fields = {
     'id': fields.Integer,
-    'name': fields.String,
+    'name': fields.String(attribute='food.name'),
     'days': fields.Integer,
 }
 
@@ -41,9 +41,9 @@ menu_with_daily_menus_fields = menu_fields.copy()
 menu_with_daily_menus_fields['daily_menus'] = fields.List(fields.Nested(daily_menu_fields))
 
 foods_fields = {
-    'starters': fields.Nested(starter_fields),
-    'lunches': fields.Nested(lunch_fields),
-    'dinners': fields.Nested(dinner_fields),
+    'id': fields.Integer,
+    'name': fields.String,
+    'type': fields.Integer,
 }
 
 food_ingredient_fields = {

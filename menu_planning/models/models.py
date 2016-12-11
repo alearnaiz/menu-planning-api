@@ -17,7 +17,7 @@ class ProductStatus(IntEnum):
 class Menu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=True)
-    daily_menus = db.relationship('DailyMenu', backref='menu', lazy='select')
+    daily_menus = db.relationship('DailyMenu', lazy='select')
     favourite = db.Column(db.Boolean, server_default=expression.false())
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
@@ -65,55 +65,54 @@ class FoodIngredient(db.Model):
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, type):
+    def __init__(self, name, type):
+        self.name = name
         self.type = type
 
     def __repr__(self):
-        return 'Food {0}, type {1}'.format(self.id, self.type)
+        return 'Food {0}, name {1}, type {2}'.format(self.id, self.name, self.type)
+
+
+class Starter(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey('food.id'), primary_key=True)
+    food = db.relationship('Food', lazy='select')
+
+    def __repr__(self):
+        return 'Food {0}'.format(self.id)
 
 
 class Lunch(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('food.id'), primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     days = db.Column(db.Integer, default=1)
     need_starter = db.Column(db.Boolean, server_default=expression.false())
     related_dinner_id = db.Column(db.Integer, db.ForeignKey('dinner.id'), nullable=True)
+    food = db.relationship('Food', lazy='select')
 
-    def __init__(self, name, days=1, need_starter=False, related_dinner_id=None):
-        self.name = name
+    def __init__(self, days=1, need_starter=False, related_dinner_id=None):
         self.days = days
         self.need_starter = need_starter
         self.related_dinner_id = related_dinner_id
 
     def __repr__(self):
-        return 'Lunch {0}, name {1}'.format(self.id, self.name)
+        return 'Lunch {0}, days {1}, need starter {2}, related dinner id {3}'.format(self.id, self.days,
+                                                                                     self.need_starter,
+                                                                                     self.related_dinner_id)
 
 
 class Dinner(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('food.id'), primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
     days = db.Column(db.Integer, default=1)
-    related_lunch = db.relationship('Lunch', uselist=False, backref='dinner', lazy='select')
+    related_lunch = db.relationship('Lunch', uselist=False, backref='related_dinner', lazy='select')
+    food = db.relationship('Food', lazy='select')
 
-    def __init__(self, name, days=1):
-        self.name = name
+    def __init__(self, days=1):
         self.days = days
 
     def __repr__(self):
-        return 'Dinner {0}, name {1}'.format(self.id, self.name)
-
-
-class Starter(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey('food.id'), primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return 'Starter {0}, name {1}'.format(self.id, self.name)
+        return 'Dinner {0}, days {1}'.format(self.id, self.days)
 
 
 class Ingredient(db.Model):
