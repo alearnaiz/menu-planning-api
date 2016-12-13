@@ -68,31 +68,6 @@ class MenuApi(Resource):
         if not menu:
             abort(404, message="Menu {} doesn't exist".format(menu_id))
 
-        starter_service = StarterService()
-        lunch_service = LunchService()
-        dinner_service = DinnerService()
-
-        for daily_menu in menu.daily_menus:
-
-            if daily_menu.lunch_id:
-                lunch = lunch_service.get_by_id(daily_menu.lunch_id)
-            else:
-                lunch = None
-
-            if daily_menu.starter_id:
-                starter = starter_service.get_by_id(daily_menu.starter_id)
-            else:
-                starter = None
-
-            if daily_menu.dinner_id:
-                dinner = dinner_service.get_by_id(daily_menu.dinner_id)
-            else:
-                dinner = None
-
-            daily_menu.starter = starter
-            daily_menu.lunch = lunch
-            daily_menu.dinner = dinner
-
         return menu
 
     def put(self, menu_id):

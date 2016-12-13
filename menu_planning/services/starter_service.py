@@ -1,8 +1,14 @@
-from menu_planning.models import Starter
+from menu_planning.models import Starter, db
 from sqlalchemy.sql.expression import func
 
 
 class StarterService:
+
+    def create(self, id):
+        starter = Starter(id)
+        db.session.add(starter)
+        db.session.commit()
+        return starter
 
     def get_by_id(self, id):
         return Starter.query.filter_by(id=id).first()

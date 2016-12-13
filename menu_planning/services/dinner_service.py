@@ -1,8 +1,14 @@
 from sqlalchemy.sql.expression import func, text
-from menu_planning.models import Dinner, DailyMenu
+from menu_planning.models import Dinner, DailyMenu, db
 
 
 class DinnerService:
+
+    def create(self, id, days=1):
+        dinner = Dinner(id, days)
+        db.session.add(dinner)
+        db.session.commit()
+        return dinner
 
     def get_by_id(self, id):
         return Dinner.query.filter_by(id=id).first()

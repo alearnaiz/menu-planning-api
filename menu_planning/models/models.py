@@ -25,9 +25,6 @@ class Menu(db.Model):
         self.name = name
         self.favourite = favourite
 
-    def __repr__(self):
-        return 'Menu {0}, name {1}, created at {2}'.format(self.id, self.name, self.created_at)
-
 
 class DailyMenu(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,6 +33,9 @@ class DailyMenu(db.Model):
     lunch_id = db.Column(db.Integer, db.ForeignKey('lunch.id'), nullable=True)
     dinner_id = db.Column(db.Integer, db.ForeignKey('dinner.id'), nullable=True)
     starter_id = db.Column(db.Integer, db.ForeignKey('starter.id'), nullable=True)
+    starter = db.relationship('Starter', lazy='select')
+    lunch = db.relationship('Lunch', lazy='select')
+    dinner = db.relationship('Dinner', lazy='select')
 
     def __init__(self, day, menu_id, lunch_id=None, dinner_id=None, starter_id=None):
         self.day = day
@@ -43,9 +43,6 @@ class DailyMenu(db.Model):
         self.lunch_id = lunch_id
         self.dinner_id = dinner_id
         self.starter_id = starter_id
-
-    def __repr__(self):
-        return 'Daily menu {0}, day {1}'.format(self.id, self.day)
 
 
 class FoodIngredient(db.Model):
@@ -58,10 +55,6 @@ class FoodIngredient(db.Model):
         self.ingredient_id = ingredient_id
         self.quantity = quantity
 
-    def __repr__(self):
-        return 'FoodIngredient, food {0}, ingredient {1}, quantity {2}'.format(self.food_id, self.ingredient_id,
-                                                                               self.quantity)
-
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,16 +65,13 @@ class Food(db.Model):
         self.name = name
         self.type = type
 
-    def __repr__(self):
-        return 'Food {0}, name {1}, type {2}'.format(self.id, self.name, self.type)
-
 
 class Starter(db.Model):
     id = db.Column(db.Integer, db.ForeignKey('food.id'), primary_key=True)
     food = db.relationship('Food', lazy='select')
 
-    def __repr__(self):
-        return 'Food {0}'.format(self.id)
+    def __init__(self, id):
+        self.id = id
 
 
 class Lunch(db.Model):
@@ -91,15 +81,11 @@ class Lunch(db.Model):
     related_dinner_id = db.Column(db.Integer, db.ForeignKey('dinner.id'), nullable=True)
     food = db.relationship('Food', lazy='select')
 
-    def __init__(self, days=1, need_starter=False, related_dinner_id=None):
+    def __init__(self, id, days=1, need_starter=False, related_dinner_id=None):
+        self.id = id
         self.days = days
         self.need_starter = need_starter
         self.related_dinner_id = related_dinner_id
-
-    def __repr__(self):
-        return 'Lunch {0}, days {1}, need starter {2}, related dinner id {3}'.format(self.id, self.days,
-                                                                                     self.need_starter,
-                                                                                     self.related_dinner_id)
 
 
 class Dinner(db.Model):
@@ -108,11 +94,9 @@ class Dinner(db.Model):
     related_lunch = db.relationship('Lunch', uselist=False, backref='related_dinner', lazy='select')
     food = db.relationship('Food', lazy='select')
 
-    def __init__(self, days=1):
+    def __init__(self, id, days=1):
+        self.id = id
         self.days = days
-
-    def __repr__(self):
-        return 'Dinner {0}, days {1}'.format(self.id, self.days)
 
 
 class Ingredient(db.Model):
@@ -121,9 +105,6 @@ class Ingredient(db.Model):
 
     def __init__(self, name):
         self.name = name
-
-    def __repr__(self):
-        return 'Ingredient {0}, name {1}'.format(self.id, self.name)
 
 
 class Product(db.Model):
@@ -136,6 +117,3 @@ class Product(db.Model):
         self.name = name
         self.quantity = quantity
         self.status = status
-
-    def __repr__(self):
-        return 'Product {0}, name {1}, quantity {2}, status {3}'.format(self.id, self.name, self.quantity, self.status)

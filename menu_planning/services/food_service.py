@@ -1,7 +1,13 @@
-from menu_planning.models import Food
+from menu_planning.models import Food, db
 
 
 class FoodService:
+
+    def create(self, name, type):
+        food = Food(name, type)
+        db.session.add(food)
+        db.session.commit()
+        return food
 
     def get_by_id(self, id):
         return Food.query.filter_by(id=id).first()
