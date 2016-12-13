@@ -18,3 +18,6 @@ import menu_planning.apis.menu_api
 import menu_planning.apis.food_api
 import menu_planning.apis.ingredient_api
 import menu_planning.apis.product_api
+import menu_planning.apis.starter_api
+import menu_planning.apis.lunch_api
+import menu_planning.apis.dinner_api

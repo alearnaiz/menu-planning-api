@@ -4,9 +4,6 @@ from flask import request
 from menu_planning.actions.menu_generator import MenuGenerator
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
-from menu_planning.services.starter_service import StarterService
-from menu_planning.services.lunch_service import LunchService
-from menu_planning.services.dinner_service import DinnerService
 from menu_planning.apis.resources import menu_fields, menu_with_daily_menus_fields
 from menu_planning.apis.utils import get_boolean, get_date, get_int, get_checkbox
 

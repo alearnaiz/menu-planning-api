@@ -19,7 +19,9 @@ dinner_fields = {
 lunch_fields = {
     'id': fields.Integer,
     'name': fields.String(attribute='food.name'),
+    'need_starter': fields.Boolean,
     'days': fields.Integer,
+    'related_dinner_id': fields.Integer(default=None),
 }
 
 daily_menu_fields = {
