@@ -20,11 +20,7 @@ class FoodApi(Resource):
 
     @marshal_with(food_with_ingredients_fields)
     def get(self, food_id):
-        food_service = FoodService()
-
-        food = food_service.get_by_id(id=food_id)
-        if not food:
-            abort(404, message="Food {} doesn't exist".format(food_id))
+        food = check_food(food_id)
 
         ingredient_service = IngredientService()
         food_ingredient_service = FoodIngredientService()
@@ -37,3 +33,12 @@ class FoodApi(Resource):
         return food
 
 api.add_resource(FoodApi, '/foods/<int:food_id>')
+
+
+def check_food(food_id, food_service=FoodService()):
+    food = food_service.get_by_id(id=food_id)
+    if not food:
+        abort(404, message="Food {} doesn't exist".format(food_id))
+
+    return food
+

@@ -24,15 +24,12 @@ class ProductListApi(Resource):
 
     @marshal_with(product_fields)
     def post(self):
-        name = request.form.get('name')
-        quantity = get_float(request.form.get('quantity'))
-        status = get_int(request.form.get('status'))
+        name, quantity, status = check_request(request)
 
-        if not name or status not in list(map(int, ProductStatus)):
-            abort(400, message='Wrong parameters')
+        product = set_product(name=name, quantity=quantity, status=status)
 
         product_service = ProductService()
-        product = product_service.create(name=name, status=status, quantity=quantity)
+        product = product_service.create(product)
         return product, 201
 
 api.add_resource(ProductListApi, '/products')
@@ -42,24 +39,21 @@ class ProductApi(Resource):
 
     def put(self, product_id):
         product_service = ProductService()
-        product = product_service.get_by_id(product_id)
 
-        if not product:
-            abort(404, message="Product {} doesn't exist".format(product))
+        check_product(product_id, product_service)
 
-        name = request.form.get('name')
-        quantity = get_float(request.form.get('quantity'))
-        status = get_int(request.form.get('status'))
+        name, quantity, status = check_request(request)
+        product = set_product(name=name, quantity=quantity, status=status, id=product_id)
 
-        if not name or status not in list(map(int, ProductStatus)):
-            abort(400, message='Wrong parameters')
-
-        product_service.update(id=product_id, name=name, status=status, quantity=quantity)
+        product_service.update(product)
         return 'Product {} updated'.format(product_id)
 
     def delete(self, product_id):
         product_service = ProductService()
-        product_service.delete_by_id(product_id)
+
+        product = check_product(product_id, product_service)
+
+        product_service.delete(product)
         return 'Product {} deleted'.format(product_id)
 
 api.add_resource(ProductApi, '/products/<int:product_id>')
@@ -99,3 +93,32 @@ def send_ingredients_from_menu_to_grocery_list(menu_id):
             product_service.create(product.name, product.status, product.quantity)
 
     return 'Ingredients from menu {} sent to the grocery list'.format(menu_id), 201
+
+
+def set_product(name, quantity, status, id=None):
+    product = Product(name=name, quantity=quantity, status=status)
+
+    if id:
+        product.id = id
+
+    return product
+
+
+def check_product(product_id, product_service=ProductService()):
+    product = product_service.get_by_id(product_id)
+
+    if not product:
+        abort(404, message="Product {} doesn't exist".format(product_id))
+
+    return product
+
+
+def check_request(request):
+    name = request.form.get('name')
+    quantity = get_float(request.form.get('quantity'))
+    status = get_int(request.form.get('status'))
+
+    if not name or status not in list(map(int, ProductStatus)):
+        abort(400, message='Wrong parameters')
+
+    return name, quantity, status

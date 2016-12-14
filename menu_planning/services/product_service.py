@@ -14,22 +14,17 @@ class ProductService:
         Product.query.delete()
         db.session.commit()
 
-    def delete_by_id(self, id):
-        Product.query.filter_by(id=id).delete()
-        db.session.commit()
-
-    def create(self, name, status, quantity=None):
-        product = Product(name=name, status=status, quantity=quantity)
+    def create(self, product):
         db.session.add(product)
         db.session.commit()
         return product
 
-    def update(self, id, name, status, quantity=None):
-        product = self.get_by_id(id)
-        product.name = name
-        product.status = status
-        product.quantity = quantity
-        db.session.add(product)
+    def update(self, product):
+        db.session.merge(product)
         db.session.commit()
         return product
+
+    def delete(self, product):
+        db.session.delete(product)
+        db.session.commit()
 

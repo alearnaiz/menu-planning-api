@@ -59,20 +59,11 @@ class MenuApi(Resource):
 
     @marshal_with(menu_with_daily_menus_fields)
     def get(self, menu_id):
-        menu_service = MenuService()
-        menu = menu_service.get_by_id(menu_id)
-
-        if not menu:
-            abort(404, message="Menu {} doesn't exist".format(menu_id))
-
-        return menu
+        return check_menu(menu_id)
 
     def put(self, menu_id):
         menu_service = MenuService()
-        menu = menu_service.get_by_id(menu_id)
-
-        if not menu:
-            abort(404, message="Menu {} doesn't exist".format(menu_id))
+        menu = check_menu(menu_id, menu_service)
 
         # Update name and favourite
         name = request.form.get('name')
@@ -105,3 +96,12 @@ class MenuFavouriteListApi(Resource):
         return menu_service.get_all_by_favourites()
 
 api.add_resource(MenuFavouriteListApi, '/menus/favourites')
+
+
+def check_menu(menu_id, menu_service=MenuService()):
+    menu = menu_service.get_by_id(menu_id)
+
+    if not menu:
+        abort(404, message="Menu {} doesn't exist".format(menu_id))
+
+    return menu

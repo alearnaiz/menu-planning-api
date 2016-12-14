@@ -17,12 +17,7 @@ class DinnerListApi(Resource):
 
     @marshal_with(dinner_fields)
     def post(self):
-        name = request.form.get('name')
-
-        if not name:
-            abort(400, message='Wrong parameters')
-
-        days = get_int(request.form.get('days'))
+        name, days = check_request(request)
 
         food_service = FoodService()
         food = food_service.create(name, FoodType.dinner.value)
@@ -32,3 +27,13 @@ class DinnerListApi(Resource):
         return dinner, 201
 
 api.add_resource(DinnerListApi, '/dinners')
+
+
+def check_request(request):
+    name = request.form.get('name')
+    days = get_int(request.form.get('days'))
+
+    if not name:
+        abort(400, message='Wrong parameters')
+
+    return name, days
