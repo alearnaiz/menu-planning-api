@@ -5,7 +5,7 @@ from menu_planning.actions.menu_generator import MenuGenerator
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
 from menu_planning.apis.resources import menu_fields, menu_with_daily_menus_fields
-from menu_planning.apis.utils import get_boolean, get_date, get_int, get_checkbox
+from menu_planning.apis.utils import get_boolean, get_date, get_int
 
 
 class MenuListApi(Resource):
@@ -68,7 +68,7 @@ class MenuApi(Resource):
         # Update name and favourite
         name = request.form.get('name')
         favourite = get_boolean(request.form.get('favourite'))
-        menu_service.update(menu_id, name=name, favourite=get_checkbox(favourite))
+        menu_service.update(menu_id, name=name, favourite=favourite)
 
         # Update daily menus
         daily_menu_service = DailyMenuService()
