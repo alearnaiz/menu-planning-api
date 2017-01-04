@@ -20,8 +20,8 @@ class MenuService:
         return Menu.query.filter(Menu.favourite.is_(True)).all()
 
     def get_all_by_date(self, date):
-        query_dates = DailyMenu.query.filter(DailyMenu.day == date, DailyMenu.menu_id == Menu.id)
-        return Menu.query.filter(query_dates.exists()).all()
+        daily_menu_query = DailyMenu.query.filter(DailyMenu.day == date, DailyMenu.menu_id == Menu.id)
+        return Menu.query.filter(daily_menu_query.exists()).all()
 
     def update(self, id, name=None, favourite=False):
         menu = self.get_by_id(id)
