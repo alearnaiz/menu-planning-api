@@ -5,6 +5,7 @@ from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
 from menu_planning.apis.resources import menu_fields, menu_with_daily_menus_fields
 from menu_planning.apis import utils
+from datetime import date
 
 
 class MenuListApi(Resource):
@@ -100,14 +101,24 @@ class MenuApi(Resource):
 api.add_resource(MenuApi, '/menus/<int:menu_id>')
 
 
-class MenuFavouriteListApi(Resource):
+class FavouriteMenuListApi(Resource):
 
     @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()
         return menu_service.get_all_by_favourites()
 
-api.add_resource(MenuFavouriteListApi, '/menus/favourites')
+api.add_resource(FavouriteMenuListApi, '/menus/favourites')
+
+
+class CurrentMenuListApi(Resource):
+
+    @marshal_with(menu_with_daily_menus_fields)
+    def get(self):
+        menu_service = MenuService()
+        return menu_service.get_all_by_date(date.today())
+
+api.add_resource(CurrentMenuListApi, '/menus/current')
 
 
 def check_menu(menu_id, menu_service=MenuService()):

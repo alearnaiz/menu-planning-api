@@ -1,4 +1,4 @@
-from menu_planning.models import Menu
+from menu_planning.models import Menu, DailyMenu
 from menu_planning import db
 
 
@@ -18,6 +18,10 @@ class MenuService:
 
     def get_all_by_favourites(self):
         return Menu.query.filter(Menu.favourite.is_(True)).all()
+
+    def get_all_by_date(self, date):
+        query_dates = DailyMenu.query.filter(DailyMenu.day == date, DailyMenu.menu_id == Menu.id)
+        return Menu.query.filter(query_dates.exists()).all()
 
     def update(self, id, name=None, favourite=False):
         menu = self.get_by_id(id)
