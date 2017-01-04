@@ -25,7 +25,7 @@ class MenuGenerator:
     def generate(self, days, start_date=date.today(), start_lunch=True, end_dinner=True):
 
         if days < 1 or (days == 1 and not start_lunch and not end_dinner):
-            raise Exception('Wrong parameters')
+            raise Exception('Dates are not correct')
 
         # Set variables
         current_lunch = None

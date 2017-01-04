@@ -1,8 +1,6 @@
 from menu_planning import api, app
-from flask_restful import Resource, abort, marshal_with
-from flask import request
+from flask_restful import Resource, abort, marshal_with, reqparse
 from menu_planning.apis.resources import product_fields
-from menu_planning.apis.utils import get_float, get_int
 from menu_planning.models import Product, ProductStatus
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.ingredient_service import IngredientService
@@ -24,7 +22,7 @@ class ProductListApi(Resource):
 
     @marshal_with(product_fields)
     def post(self):
-        name, quantity, status = check_request(request)
+        name, quantity, status = check_body()
 
         product = set_product(name=name, quantity=quantity, status=status)
 
@@ -42,7 +40,7 @@ class ProductApi(Resource):
 
         check_product(product_id, product_service)
 
-        name, quantity, status = check_request(request)
+        name, quantity, status = check_body()
         product = set_product(name=name, quantity=quantity, status=status, id=product_id)
 
         product_service.update(product)
@@ -66,7 +64,7 @@ def send_ingredients_from_menu_to_grocery_list(menu_id):
     menu = menu_service.get_by_id(menu_id)
 
     if not menu:
-        return "Menu {} doesn't exist".format(menu_id), 404
+        return 'Menu {} does not exist'.format(menu_id), 404
 
     food_ingredient_service = FoodIngredientService()
     food_ingredients = food_ingredient_service.get_all_by_menu_id(menu_id=menu_id)
@@ -108,17 +106,23 @@ def check_product(product_id, product_service=ProductService()):
     product = product_service.get_by_id(product_id)
 
     if not product:
-        abort(404, message="Product {} doesn't exist".format(product_id))
+        abort(404, error='Product {} does not exist'.format(product_id))
 
     return product
 
 
-def check_request(request):
-    name = request.form.get('name')
-    quantity = get_float(request.form.get('quantity'))
-    status = get_int(request.form.get('status'))
+def check_body():
+    # Body
+    parser = reqparse.RequestParser()
+    parser.add_argument('name', type=str, required=True)
+    parser.add_argument('quantity', type=float, required=False)
+    parser.add_argument('status', type=int, required=True)
+    args = parser.parse_args()
+    name = args.get('name')
+    quantity = args.get('quantity')
+    status = args.get('status')
 
-    if not name or status not in list(map(int, ProductStatus)):
-        abort(400, message='Wrong parameters')
+    if status not in list(map(int, ProductStatus)):
+        abort(400, status='status not valid')
 
     return name, quantity, status

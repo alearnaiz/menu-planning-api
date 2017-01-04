@@ -1,5 +1,4 @@
-from flask import request
-from flask_restful import Resource, abort, marshal_with
+from flask_restful import Resource, marshal_with, reqparse
 from menu_planning.apis.resources import starter_fields
 from menu_planning import api
 from menu_planning.models import FoodType
@@ -16,7 +15,11 @@ class StarterListApi(Resource):
 
     @marshal_with(starter_fields)
     def post(self):
-        name = check_request(request)
+        # Body
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str, required=True)
+        args = parser.parse_args()
+        name = args.get('name')
 
         food_service = FoodService()
         starter_service = StarterService()
@@ -27,12 +30,3 @@ class StarterListApi(Resource):
         return starter, 201
 
 api.add_resource(StarterListApi, '/starters')
-
-
-def check_request(request):
-    name = request.form.get('name')
-
-    if not name:
-        abort(400, message='Wrong parameters')
-
-    return name

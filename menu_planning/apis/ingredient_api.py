@@ -1,8 +1,6 @@
-from flask import request
 from menu_planning import api
-from flask_restful import Resource, marshal_with, abort
+from flask_restful import Resource, marshal_with, reqparse
 from menu_planning.apis.resources import ingredient_fields
-from menu_planning.apis.utils import get_float
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.ingredient_service import IngredientService
 
@@ -16,10 +14,11 @@ class IngredientListApi(Resource):
 
     @marshal_with(ingredient_fields)
     def post(self):
-        name = request.form.get('name')
-
-        if not name:
-            abort(400, message='Wrong parameters')
+        # Body
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str, required=True)
+        args = parser.parse_args()
+        name = args.get('name')
 
         ingredient_service = IngredientService()
         ingredient = ingredient_service.create(name=name)
@@ -34,10 +33,17 @@ class FoodIngredientListApi(Resource):
         food_ingredient_service = FoodIngredientService()
         food_ingredient_service.delete_all_by_food_id(food_id)
 
-        ingredients = request.form.getlist('ingredients[]')
+        # Body
+        parser = reqparse.RequestParser()
+        parser.add_argument('ingredient', action='append', type=int, required=True)
+        args = parser.parse_args()
+        ingredients = args.get('ingredient')
 
         for ingredient_id in ingredients:
-            quantity = get_float(request.form.get('quantity_{}'.format(ingredient_id)))
+            parser = reqparse.RequestParser()
+            parser.add_argument('quantity_{}'.format(ingredient_id), type=float, required=False)
+            args = parser.parse_args()
+            quantity = args.get('quantity_{}'.format(ingredient_id))
             if quantity and quantity <= 0:
                 quantity = None
             food_ingredient_service.create(food_id=food_id, ingredient_id=ingredient_id, quantity=quantity)

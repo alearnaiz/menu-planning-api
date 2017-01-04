@@ -1,11 +1,10 @@
 from menu_planning import api
-from flask_restful import Resource, marshal_with, abort
-from flask import request
+from flask_restful import Resource, marshal_with, abort, reqparse, inputs
 from menu_planning.actions.menu_generator import MenuGenerator
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
 from menu_planning.apis.resources import menu_fields, menu_with_daily_menus_fields
-from menu_planning.apis.utils import get_boolean, get_date, get_int
+from menu_planning.apis import utils
 
 
 class MenuListApi(Resource):
@@ -17,38 +16,41 @@ class MenuListApi(Resource):
 
     @marshal_with(menu_fields)
     def post(self):
-        start_lunch = request.form.get('start_lunch')
-        end_dinner = request.form.get('end_dinner')
-        start_date = request.form.get('start_date')
-        end_date = request.form.get('end_date')
-
-        if not start_lunch or not end_dinner or not start_date or not end_date:
-            abort(400, message='Wrong parameters')
+        # Body
+        parser = reqparse.RequestParser()
+        parser.add_argument('start_lunch', type=inputs.boolean, required=True)
+        parser.add_argument('end_dinner', type=inputs.boolean, required=True)
+        parser.add_argument('start_date', type=utils.get_date, required=True)
+        parser.add_argument('end_date', type=utils.get_date, required=True)
+        parser.add_argument('name', type=str, required=False)
+        parser.add_argument('favourite', type=inputs.boolean, required=False)
+        args = parser.parse_args()
+        start_lunch = args.get('start_lunch')
+        end_dinner = args.get('end_dinner')
+        start_date = args.get('start_date')
+        end_date = args.get('end_date')
+        name = args.get('name')
+        favourite = args.get('favourite')
 
         try:
-            start_date = get_date(start_date)
-            end_date = get_date(end_date)
             days = (end_date - start_date).days + 1
 
             menu_generator = MenuGenerator()
-            menu = menu_generator.generate(days=days, start_date=start_date, start_lunch=get_boolean(start_lunch),
-                                           end_dinner=get_boolean(end_dinner))
-
-            name = request.form.get('name')
-            favourite = request.form.get('favourite')
+            menu = menu_generator.generate(days=days, start_date=start_date, start_lunch=start_lunch,
+                                           end_dinner=end_dinner)
 
             if name and favourite:
                 menu_service = MenuService()
-                menu_service.update(menu.id, name=name, favourite=get_boolean(favourite))
+                menu_service.update(menu.id, name=name, favourite=favourite)
             elif name:
                 menu_service = MenuService()
                 menu_service.update(menu.id, name=name)
             elif favourite:
                 menu_service = MenuService()
-                menu_service.update(menu.id, favourite=get_boolean(favourite))
+                menu_service.update(menu.id, favourite=favourite)
 
         except Exception as exception:
-            abort(400, message=str(exception))
+            abort(400, error=str(exception))
 
         return menu, 201
 
@@ -65,17 +67,27 @@ class MenuApi(Resource):
         menu_service = MenuService()
         menu = check_menu(menu_id, menu_service)
 
-        # Update name and favourite
-        name = request.form.get('name')
-        favourite = get_boolean(request.form.get('favourite'))
+        # Body
+        parser = reqparse.RequestParser()
+        for daily_menu in menu.daily_menus:
+            parser.add_argument('starter[' + str(daily_menu.day) + ']', type=int, required=False)
+            parser.add_argument('lunch[' + str(daily_menu.day) + ']', type=int, required=False)
+            parser.add_argument('dinner[' + str(daily_menu.day) + ']', type=int, required=False)
+        parser.add_argument('name', type=str, required=False)
+        parser.add_argument('favourite', type=inputs.boolean, required=True)
+        args = parser.parse_args()
+        name = args.get('name')
+        favourite = args.get('favourite')
+
+        # Update menu
         menu_service.update(menu_id, name=name, favourite=favourite)
 
         # Update daily menus
         daily_menu_service = DailyMenuService()
         for daily_menu in menu.daily_menus:
-            starter_id = get_int(request.form.get('starter[' + str(daily_menu.day) + ']'))
-            lunch_id = get_int(request.form.get('lunch[' + str(daily_menu.day) + ']'))
-            dinner_id = get_int(request.form.get('dinner[' + str(daily_menu.day) + ']'))
+            starter_id = args.get('starter[' + str(daily_menu.day) + ']')
+            lunch_id = args.get('lunch[' + str(daily_menu.day) + ']')
+            dinner_id = args.get('dinner[' + str(daily_menu.day) + ']')
 
             daily_menu.starter_id = starter_id
             daily_menu.lunch_id = lunch_id
@@ -102,6 +114,6 @@ def check_menu(menu_id, menu_service=MenuService()):
     menu = menu_service.get_by_id(menu_id)
 
     if not menu:
-        abort(404, message="Menu {} doesn't exist".format(menu_id))
+        abort(404, error='Menu {} does not exist'.format(menu_id))
 
     return menu

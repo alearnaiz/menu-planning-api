@@ -38,7 +38,7 @@ api.add_resource(FoodApi, '/foods/<int:food_id>')
 def check_food(food_id, food_service=FoodService()):
     food = food_service.get_by_id(id=food_id)
     if not food:
-        abort(404, message="Food {} doesn't exist".format(food_id))
+        abort(404, error='Food {} does not exist'.format(food_id))
 
     return food
 
