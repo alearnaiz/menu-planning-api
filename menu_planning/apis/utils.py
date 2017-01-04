@@ -6,4 +6,4 @@ def get_date(date):
         year, month, day = date.split('-')
         return datetime(int(year), int(month), int(day))
     except Exception:
-        raise ValueError("Date format (dd-mm-yyyy) is not correct")
+        raise ValueError("Date format is not correct, it should be yyyy-mm-dd")
