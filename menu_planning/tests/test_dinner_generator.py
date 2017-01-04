@@ -11,7 +11,7 @@ class TestDinnerGenerator(unittest.TestCase):
         self.dinner_service = DinnerService()
 
     def test_valid(self):
-        self.dinner_service.get_random = MagicMock(return_value=Dinner(days=1))
+        self.dinner_service.get_random = MagicMock(return_value=Dinner(id=1, days=1))
         self.dinner_service.get_by_id_and_menu_id = MagicMock(return_value=None)
 
         dinner_generator = DinnerGenerator(1, lunch_days_left=2, dinner_days_left=2, dinner_service=self.dinner_service)
@@ -19,7 +19,7 @@ class TestDinnerGenerator(unittest.TestCase):
         assert dinner_generator.is_valid()
 
     def test_invalid_has_enough_days(self):
-        self.dinner_service.get_random = MagicMock(return_value=Dinner(days=3))
+        self.dinner_service.get_random = MagicMock(return_value=Dinner(id=1, days=3))
         self.dinner_service.get_by_id_and_menu_id = MagicMock(return_value=None)
 
         dinner_generator = DinnerGenerator(1, lunch_days_left=2, dinner_days_left=2, dinner_service=self.dinner_service)
@@ -27,7 +27,7 @@ class TestDinnerGenerator(unittest.TestCase):
         assert not dinner_generator.is_valid()
 
     def test_invalid_is_already_add(self):
-        dinner = Dinner(days=1)
+        dinner = Dinner(id=1, days=1)
         self.dinner_service.get_random = MagicMock(return_value=dinner)
         self.dinner_service.get_by_id_and_menu_id = MagicMock(return_value=dinner)
 
@@ -36,8 +36,8 @@ class TestDinnerGenerator(unittest.TestCase):
         assert not dinner_generator.is_valid()
 
     def test_invalid_can_have_related_dinner(self):
-        dinner = Dinner()
-        dinner.related_lunch = Lunch()
+        dinner = Dinner(id=1)
+        dinner.related_lunch = Lunch(id=1)
         self.dinner_service.get_random = MagicMock(return_value=dinner)
         self.dinner_service.get_by_id_and_menu_id = MagicMock(return_value=None)
 
@@ -47,8 +47,8 @@ class TestDinnerGenerator(unittest.TestCase):
         assert not dinner_generator.is_valid()
 
     def test_invalid_has_related_dinner_enough_days(self):
-        dinner = Dinner(days=1)
-        dinner.related_lunch = Lunch(days=3)
+        dinner = Dinner(id=1, days=1)
+        dinner.related_lunch = Lunch(id=1, days=3)
         self.dinner_service.get_random = MagicMock(return_value=dinner)
         self.dinner_service.get_by_id_and_menu_id = MagicMock(return_value=None)
 
