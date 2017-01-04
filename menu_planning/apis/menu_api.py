@@ -113,7 +113,7 @@ api.add_resource(FavouriteMenuListApi, '/menus/favourites')
 
 class CurrentMenuListApi(Resource):
 
-    @marshal_with(menu_with_daily_menus_fields)
+    @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()
         return menu_service.get_all_by_date(date.today())
