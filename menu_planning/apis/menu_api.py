@@ -70,9 +70,9 @@ class MenuApi(Resource):
         # Body
         parser = reqparse.RequestParser()
         for daily_menu in menu.daily_menus:
-            parser.add_argument('starter[' + str(daily_menu.day) + ']', type=int, required=False)
-            parser.add_argument('lunch[' + str(daily_menu.day) + ']', type=int, required=False)
-            parser.add_argument('dinner[' + str(daily_menu.day) + ']', type=int, required=False)
+            parser.add_argument('starter_id[' + str(daily_menu.day) + ']', type=int, required=False)
+            parser.add_argument('lunch_id[' + str(daily_menu.day) + ']', type=int, required=False)
+            parser.add_argument('dinner_id[' + str(daily_menu.day) + ']', type=int, required=False)
         parser.add_argument('name', type=str, required=False)
         parser.add_argument('favourite', type=inputs.boolean, required=True)
         args = parser.parse_args()
@@ -85,9 +85,9 @@ class MenuApi(Resource):
         # Update daily menus
         daily_menu_service = DailyMenuService()
         for daily_menu in menu.daily_menus:
-            starter_id = args.get('starter[' + str(daily_menu.day) + ']')
-            lunch_id = args.get('lunch[' + str(daily_menu.day) + ']')
-            dinner_id = args.get('dinner[' + str(daily_menu.day) + ']')
+            starter_id = args.get('starter_id[' + str(daily_menu.day) + ']')
+            lunch_id = args.get('lunch_id[' + str(daily_menu.day) + ']')
+            dinner_id = args.get('dinner_id[' + str(daily_menu.day) + ']')
 
             daily_menu.starter_id = starter_id
             daily_menu.lunch_id = lunch_id

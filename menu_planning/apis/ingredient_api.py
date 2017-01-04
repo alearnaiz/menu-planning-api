@@ -35,14 +35,15 @@ class FoodIngredientListApi(Resource):
 
         # Body
         parser = reqparse.RequestParser()
-        parser.add_argument('ingredient', action='append', type=int, required=True)
+        parser.add_argument('ingredient_id', action='append', type=int, required=True)
         args = parser.parse_args()
-        ingredients = args.get('ingredient')
+        ingredients = args.get('ingredient_id')
+        parser = reqparse.RequestParser()
+        for ingredient_id in ingredients:
+            parser.add_argument('quantity_{}'.format(ingredient_id), type=float, required=False)
+        args = parser.parse_args()
 
         for ingredient_id in ingredients:
-            parser = reqparse.RequestParser()
-            parser.add_argument('quantity_{}'.format(ingredient_id), type=float, required=False)
-            args = parser.parse_args()
             quantity = args.get('quantity_{}'.format(ingredient_id))
             if quantity and quantity <= 0:
                 quantity = None

@@ -123,6 +123,6 @@ def check_body():
     status = args.get('status')
 
     if status not in list(map(int, ProductStatus)):
-        abort(400, status='status not valid')
+        abort(400, status='Status not valid')
 
     return name, quantity, status
