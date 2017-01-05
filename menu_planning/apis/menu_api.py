@@ -108,7 +108,7 @@ class FavouriteMenuListApi(Resource):
         menu_service = MenuService()
         return menu_service.get_all_by_favourites()
 
-api.add_resource(FavouriteMenuListApi, '/menus/favourites')
+api.add_resource(FavouriteMenuListApi, '/menus/favourite')
 
 
 class CurrentMenuListApi(Resource):
