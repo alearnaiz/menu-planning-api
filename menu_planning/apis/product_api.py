@@ -88,7 +88,7 @@ def send_ingredients_from_menu_to_grocery_list(menu_id):
         product_service = ProductService()
         for ingredient_id in products:
             product = products[ingredient_id]
-            product_service.create(product.name, product.status, product.quantity)
+            product_service.create(product)
 
     return 'Ingredients from menu {} sent to the grocery list'.format(menu_id), 201
 
