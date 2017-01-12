@@ -1,7 +1,7 @@
 # Menu planning
 
 ## Overview
-Menu planning API is an API for generating random menu using your common starters, lunches and dinners.
+Menu planning API is an API for generating random menus using your common starters, lunches and dinners
 
 ## Requirements
 * Python >= 3.3
