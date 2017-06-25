@@ -3,8 +3,8 @@ from menu_planning.models import Food, db
 
 class FoodService:
 
-    def create(self, name, type):
-        food = Food(name, type)
+    def create(self, name, type, url=None):
+        food = Food(name, type, url)
         db.session.add(food)
         db.session.commit()
         return food

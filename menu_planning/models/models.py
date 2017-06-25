@@ -60,10 +60,12 @@ class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     type = db.Column(db.Integer, nullable=False)
+    url = db.Column(db.String(100), nullable=True)
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, url=None):
         self.name = name
         self.type = type
+        self.url = url
 
 
 class Starter(db.Model):

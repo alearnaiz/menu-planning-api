@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import json
 import os
 from flask_cors import CORS
@@ -13,6 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{0}:{1}@{2}/{3}?charset={4}'\
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
+migrate = Migrate(app, db)
 
 import menu_planning.apis.menu_api
 import menu_planning.apis.food_api

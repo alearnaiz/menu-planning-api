@@ -18,13 +18,15 @@ class DinnerListApi(Resource):
         # Body
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
+        parser.add_argument('url', type=str, required=False)
         parser.add_argument('days', type=int, required=False)
         args = parser.parse_args()
         name = args.get('name')
+        url = args.get('url')
         days = args.get('days')
 
         food_service = FoodService()
-        food = food_service.create(name, FoodType.dinner.value)
+        food = food_service.create(name, FoodType.dinner.value, url)
         dinner_service = DinnerService()
         dinner = dinner_service.create(food.id, days)
 

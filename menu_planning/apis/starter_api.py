@@ -18,13 +18,15 @@ class StarterListApi(Resource):
         # Body
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
+        parser.add_argument('url', type=str, required=False)
         args = parser.parse_args()
         name = args.get('name')
+        url = args.get('url')
 
         food_service = FoodService()
         starter_service = StarterService()
 
-        food = food_service.create(name, FoodType.starter.value)
+        food = food_service.create(name, FoodType.starter.value, url)
         starter = starter_service.create(food.id)
 
         return starter, 201
