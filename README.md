@@ -36,3 +36,9 @@ export FLASK_APP=runserver.py
 ```shell
 flask db upgrade
 ```
+
+* Run application
+
+```shell
+flask run
+```
