@@ -25,9 +25,14 @@ Menu planning API is an API for generating random menus using your common starte
 }
 ```
 
-* Create the initial database. Import the db object from an interactive Python shell in the root directory to create the tables and database
+* Export variable FLASK_APP
 
-```python
-from menu_planning import db
-db.create_all()
+```shell
+export FLASK_APP=runserver.py
+```
+
+* Import migrations
+
+```shell
+flask db upgrade
 ```
