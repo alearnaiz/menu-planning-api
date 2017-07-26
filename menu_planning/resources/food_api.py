@@ -1,6 +1,6 @@
 from menu_planning import api
 from flask_restful import Resource, marshal_with, abort
-from menu_planning.apis.resources import foods_fields, food_with_ingredients_fields
+from menu_planning.resources.output_fields import foods_fields, food_with_ingredients_fields
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.food_service import FoodService
 from menu_planning.services.ingredient_service import IngredientService

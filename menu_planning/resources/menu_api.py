@@ -3,8 +3,8 @@ from flask_restful import Resource, marshal_with, abort, reqparse, inputs
 from menu_planning.actions.menu_generator import MenuGenerator
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
-from menu_planning.apis.resources import menu_fields, menu_with_daily_menus_fields
-from menu_planning.apis import utils
+from menu_planning.resources.output_fields import menu_fields, menu_with_daily_menus_fields
+from menu_planning.resources import utils
 from datetime import date
 
 

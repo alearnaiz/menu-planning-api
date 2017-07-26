@@ -1,6 +1,6 @@
 from flask_restful import Resource, marshal_with, reqparse
 from menu_planning import api
-from menu_planning.apis.resources import dinner_fields
+from menu_planning.resources.output_fields import dinner_fields
 from menu_planning.models import FoodType
 from menu_planning.services.dinner_service import DinnerService
 from menu_planning.services.food_service import FoodService

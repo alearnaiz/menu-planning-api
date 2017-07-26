@@ -1,6 +1,6 @@
 from menu_planning import api, app
 from flask_restful import Resource, abort, marshal_with, reqparse
-from menu_planning.apis.resources import product_fields
+from menu_planning.resources.output_fields import product_fields
 from menu_planning.models import Product, ProductStatus
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.ingredient_service import IngredientService

@@ -16,10 +16,10 @@ db = SQLAlchemy(app)
 CORS(app)
 migrate = Migrate(app, db)
 
-import menu_planning.apis.menu_api
-import menu_planning.apis.food_api
-import menu_planning.apis.ingredient_api
-import menu_planning.apis.product_api
-import menu_planning.apis.starter_api
-import menu_planning.apis.lunch_api
-import menu_planning.apis.dinner_api
+import menu_planning.resources.menu_api
+import menu_planning.resources.food_api
+import menu_planning.resources.ingredient_api
+import menu_planning.resources.product_api
+import menu_planning.resources.starter_api
+import menu_planning.resources.lunch_api
+import menu_planning.resources.dinner_api
