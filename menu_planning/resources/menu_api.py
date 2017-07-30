@@ -1,6 +1,7 @@
 from menu_planning import api
-from flask_restful import Resource, marshal_with, abort, reqparse, inputs
+from flask_restful import Resource, marshal_with, abort, reqparse, inputs, marshal, request
 from menu_planning.actions.menu_generator import MenuGenerator
+from menu_planning.resources.marshmallow import MenuWithDailyMenusSchema, get_data
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
 from menu_planning.resources.output_fields import menu_fields, menu_with_daily_menus_fields
@@ -66,35 +67,25 @@ class MenuApi(Resource):
 
     def put(self, menu_id):
         menu_service = MenuService()
-        menu = check_menu(menu_id, menu_service)
+        check_menu(menu_id, menu_service)
 
         # Body
-        parser = reqparse.RequestParser()
-        for daily_menu in menu.daily_menus:
-            parser.add_argument('starter_id[' + str(daily_menu.day) + ']', type=int, required=False)
-            parser.add_argument('lunch_id[' + str(daily_menu.day) + ']', type=int, required=False)
-            parser.add_argument('dinner_id[' + str(daily_menu.day) + ']', type=int, required=False)
-        parser.add_argument('name', type=str, required=False)
-        parser.add_argument('favourite', type=inputs.boolean, required=True)
-        args = parser.parse_args()
-        name = args.get('name')
-        favourite = args.get('favourite')
-
-        # Update menu
-        menu_service.update(menu_id, name=name, favourite=favourite)
+        data = get_data(request, MenuWithDailyMenusSchema())
+        name = data.get('name')
+        favourite = data.get('favourite')
 
         # Update daily menus
         daily_menu_service = DailyMenuService()
-        for daily_menu in menu.daily_menus:
-            starter_id = args.get('starter_id[' + str(daily_menu.day) + ']')
-            lunch_id = args.get('lunch_id[' + str(daily_menu.day) + ']')
-            dinner_id = args.get('dinner_id[' + str(daily_menu.day) + ']')
-
-            daily_menu.starter_id = starter_id
-            daily_menu.lunch_id = lunch_id
-            daily_menu.dinner_id = dinner_id
+        for daily_menu_data in data.get('daily_menus'):
+            daily_menu = check_daily_menu(daily_menu_data.get('id'))
+            daily_menu.starter_id = daily_menu_data.get('starter').get('id') if daily_menu_data.get('starter') else None
+            daily_menu.lunch_id = daily_menu_data.get('lunch').get('id') if daily_menu_data.get('lunch') else None
+            daily_menu.dinner_id = daily_menu_data.get('dinner').get('id') if daily_menu_data.get('dinner') else None
 
             daily_menu_service.update(daily_menu)
+
+        # Update menu
+        menu_service.update(menu_id, name=name, favourite=favourite)
 
         return 'Menu {} updated'.format(menu_id)
 
@@ -128,3 +119,12 @@ def check_menu(menu_id, menu_service=MenuService()):
         abort(404, error='Menu {} does not exist'.format(menu_id))
 
     return menu
+
+
+def check_daily_menu(daily_menu_id, daily_menu_service=DailyMenuService()):
+    daily_menu = daily_menu_service.get_by_id(daily_menu_id)
+
+    if not daily_menu:
+        abort(404, error='Daily Menu {} does not exist'.format(daily_menu_id))
+
+    return daily_menu

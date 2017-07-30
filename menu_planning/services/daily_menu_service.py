@@ -14,3 +14,6 @@ class DailyMenuService:
         db.session.add(daily_menu)
         db.session.commit()
         return daily_menu
+
+    def get_by_id(self, id):
+        return DailyMenu.query.filter(DailyMenu.id == id).first()
