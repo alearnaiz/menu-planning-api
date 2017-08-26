@@ -23,3 +23,4 @@ import menu_planning.resources.product_api
 import menu_planning.resources.starter_api
 import menu_planning.resources.lunch_api
 import menu_planning.resources.dinner_api
+import menu_planning.resources.food_ingredient_api

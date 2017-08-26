@@ -1,4 +1,6 @@
-from flask_restful import Resource, marshal_with, reqparse
+from flask_restful import Resource, marshal_with, request
+
+from menu_planning.models.schemas import starter_schema, parser_request
 from menu_planning.resources.output_fields import starter_fields
 from menu_planning import api
 from menu_planning.models import FoodType
@@ -15,13 +17,10 @@ class StarterListApi(Resource):
 
     @marshal_with(starter_fields)
     def post(self):
-        # Body
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('url', type=str, required=False)
-        args = parser.parse_args()
-        name = args.get('name')
-        url = args.get('url')
+        # Request
+        parser = parser_request(request, starter_schema)
+        name = parser.get('name')
+        url = parser.get('url')
 
         food_service = FoodService()
         starter_service = StarterService()

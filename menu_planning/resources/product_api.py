@@ -1,5 +1,9 @@
+from flask import request
+
 from menu_planning import api, app
-from flask_restful import Resource, abort, marshal_with, reqparse
+from flask_restful import Resource, abort, marshal_with
+
+from menu_planning.models.schemas import product_schema, parser_request
 from menu_planning.resources.output_fields import product_fields
 from menu_planning.models import Product, ProductStatus
 from menu_planning.services.food_ingredient_service import FoodIngredientService
@@ -22,7 +26,7 @@ class ProductListApi(Resource):
 
     @marshal_with(product_fields)
     def post(self):
-        name, quantity, status = check_body()
+        name, quantity, status = check_request()
 
         product = set_product(name=name, quantity=quantity, status=status)
 
@@ -40,7 +44,7 @@ class ProductApi(Resource):
 
         check_product(product_id, product_service)
 
-        name, quantity, status = check_body()
+        name, quantity, status = check_request()
         product = set_product(name=name, quantity=quantity, status=status, id=product_id)
 
         product_service.update(product)
@@ -111,18 +115,11 @@ def check_product(product_id, product_service=ProductService()):
     return product
 
 
-def check_body():
-    # Body
-    parser = reqparse.RequestParser()
-    parser.add_argument('name', type=str, required=True)
-    parser.add_argument('quantity', type=float, required=False)
-    parser.add_argument('status', type=int, required=True)
-    args = parser.parse_args()
-    name = args.get('name')
-    quantity = args.get('quantity')
-    status = args.get('status')
-
-    if status not in list(map(int, ProductStatus)):
-        abort(400, status='Status not valid')
+def check_request():
+    # Request
+    parser = parser_request(request, product_schema)
+    name = parser.get('name')
+    quantity = parser.get('quantity')
+    status = parser.get('status')
 
     return name, quantity, status

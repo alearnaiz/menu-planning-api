@@ -1,12 +1,13 @@
+from datetime import date
+
+from flask_restful import Resource, marshal_with, abort, request
+
 from menu_planning import api
-from flask_restful import Resource, marshal_with, abort, reqparse, inputs, marshal, request
 from menu_planning.actions.menu_generator import MenuGenerator
-from menu_planning.resources.marshmallow import MenuWithDailyMenusSchema, get_data
+from menu_planning.models.schemas import parser_request, menu_with_daily_menus_schema, create_menu_schema
+from menu_planning.resources.output_fields import menu_fields, menu_with_daily_menus_fields
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
-from menu_planning.resources.output_fields import menu_fields, menu_with_daily_menus_fields
-from menu_planning.resources import utils
-from datetime import date
 
 
 class MenuListApi(Resource):
@@ -18,21 +19,14 @@ class MenuListApi(Resource):
 
     @marshal_with(menu_fields)
     def post(self):
-        # Body
-        parser = reqparse.RequestParser()
-        parser.add_argument('start_lunch', type=inputs.boolean, required=True)
-        parser.add_argument('end_dinner', type=inputs.boolean, required=True)
-        parser.add_argument('start_date', type=utils.get_date, required=True)
-        parser.add_argument('end_date', type=utils.get_date, required=True)
-        parser.add_argument('name', type=str, required=False)
-        parser.add_argument('favourite', type=inputs.boolean, required=False)
-        args = parser.parse_args()
-        start_lunch = args.get('start_lunch')
-        end_dinner = args.get('end_dinner')
-        start_date = args.get('start_date')
-        end_date = args.get('end_date')
-        name = args.get('name')
-        favourite = args.get('favourite')
+        # Request
+        parser = parser_request(request, create_menu_schema)
+        start_lunch = parser.get('start_lunch')
+        end_dinner = parser.get('end_dinner')
+        start_date = parser.get('start_date')
+        end_date = parser.get('end_date')
+        name = parser.get('name')
+        favourite = parser.get('favourite')
 
         try:
             days = (end_date - start_date).days + 1
@@ -69,15 +63,15 @@ class MenuApi(Resource):
         menu_service = MenuService()
         check_menu(menu_id, menu_service)
 
-        # Body
-        data = get_data(request, MenuWithDailyMenusSchema())
-        name = data.get('name')
-        favourite = data.get('favourite')
+        # Request
+        parser = parser_request(request, menu_with_daily_menus_schema)
+        name = parser.get('name')
+        favourite = parser.get('favourite')
 
         # Update daily menus
         daily_menu_service = DailyMenuService()
-        for daily_menu_data in data.get('daily_menus'):
-            daily_menu = check_daily_menu(daily_menu_data.get('id'))
+        for daily_menu_data in parser.get('daily_menus'):
+            daily_menu = check_daily_menu(menu_id, daily_menu_data.get('id'))
             daily_menu.starter_id = daily_menu_data.get('starter').get('id') if daily_menu_data.get('starter') else None
             daily_menu.lunch_id = daily_menu_data.get('lunch').get('id') if daily_menu_data.get('lunch') else None
             daily_menu.dinner_id = daily_menu_data.get('dinner').get('id') if daily_menu_data.get('dinner') else None
@@ -121,8 +115,8 @@ def check_menu(menu_id, menu_service=MenuService()):
     return menu
 
 
-def check_daily_menu(daily_menu_id, daily_menu_service=DailyMenuService()):
-    daily_menu = daily_menu_service.get_by_id(daily_menu_id)
+def check_daily_menu(menu_id, daily_menu_id, daily_menu_service=DailyMenuService()):
+    daily_menu = daily_menu_service.get_by_menu_id_and_daily_menu_id(menu_id, daily_menu_id)
 
     if not daily_menu:
         abort(404, error='Daily Menu {} does not exist'.format(daily_menu_id))
