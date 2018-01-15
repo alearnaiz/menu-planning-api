@@ -1,0 +1,51 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/create-menu.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Create menu{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/error-panel.html" %}
+
+        <div class="form-group">
+            <label for="start-date">Start date *</label>
+            <input type="text" class="form-control" id="start-date">
+        </div>
+        <div class="form-group">
+            <label for="end-date">End date *</label>
+            <input type="text" class="form-control" id="end-date">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="start-lunch"> Start lunch?
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="end-dinner"> End dinner?
+            </label>
+        </div>
+
+        <div class="hidden" id="more-options-panel">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="favourite"> Favourite?
+                </label>
+            </div>
+        </div>
+
+        <button id="create-menu" class="btn btn-lg btn-default">Save</button>
+
+        <button id="more-options" class="btn btn-lg btn-info">More options</button>
+    </div>
+{% endblock %}

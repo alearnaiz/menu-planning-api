@@ -1,0 +1,65 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/edit-food-ingredients.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Edit {{ food.name }}{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/error-panel.html" %}
+
+        {% include "utils/food-info.html" %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name *</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody id="ingredients">
+                {% for ingredient in food.ingredients %}
+                    <tr>
+                        <td>
+                            <select class="ingredient-id form-control">
+                                <option value="">---</option>
+                                {% for i in ingredients  %}
+                                    <option value="{{ i.id }}"
+                                            {% if i.id == ingredient.id %}
+                                                selected
+                                            {% endif %}
+                                    >
+                                        {{ i.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            {% if ingredient.quantity %}
+                                <input type="number" class="ingredient-quantity form-control" value="{{ ingredient.quantity }}">
+                            {% else %}
+                                <input type="number" class="ingredient-quantity form-control">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-lg btn-danger " onclick="$(this).closest('tr').remove();">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button class="btn btn-lg btn-default" id="add-ingredient">Add ingredient</button>
+
+        <input type="hidden" id="food-id" value="{{ food.id }}">
+
+        <button class="btn btn-lg btn-default" id="edit-ingredients">Save</button>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "utils/base.html" %}
+
+{% block sectionTitle %}Foods{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="list-group">
+            <div class="list-group-item active">Starters</div>
+            {% for starter in starters %}
+                <a href="/web/food/{{ starter.id }}" class="list-group-item">{{ starter.name }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="list-group">
+            <div class="list-group-item active">Lunches</div>
+            {% for lunch in lunches %}
+                <a href="/web/food/{{ lunch.id }}" class="list-group-item">{{ lunch.name }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="list-group">
+            <div class="list-group-item active">Dinners</div>
+            {% for dinner in dinners %}
+                <a href="/web/food/{{ dinner.id }}" class="list-group-item">{{ dinner.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

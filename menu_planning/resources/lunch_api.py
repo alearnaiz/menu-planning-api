@@ -1,5 +1,5 @@
 from flask import request
-from flask_restful import Resource, marshal_with
+from flask_restful import Resource, marshal_with, abort
 
 from menu_planning.models.schemas import lunch_schema, parser_request
 from menu_planning.resources.output_fields import lunch_fields
@@ -34,3 +34,20 @@ class LunchListApi(Resource):
         return lunch, 201
 
 api.add_resource(LunchListApi, '/lunches')
+
+
+class LunchApi(Resource):
+
+    @marshal_with(lunch_fields)
+    def get(self, lunch_id):
+        return check_lunch(lunch_id)
+
+api.add_resource(LunchApi, '/lunches/<int:lunch_id>')
+
+
+def check_lunch(lunch_id, lunch_service=LunchService()):
+    lunch = lunch_service.get_by_id(id=lunch_id)
+    if not lunch:
+        abort(404, error='Lunch {} does not exist'.format(lunch_id))
+
+    return lunch

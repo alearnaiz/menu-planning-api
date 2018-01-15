@@ -1,0 +1,25 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/create-starter.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Create starter{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/error-panel.html" %}
+
+        <div class="form-group">
+            <label for="name">Name *</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+            <label for="url">Url</label>
+            <input type="text" class="form-control" id="url">
+        </div>
+
+        <button id="create-starter" class="btn btn-lg btn-default">Save</button>
+    </div>
+{% endblock %}

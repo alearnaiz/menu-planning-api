@@ -1,0 +1,18 @@
+{% extends "utils/base.html" %}
+
+{% block sectionTitle %}Ingredients{% endblock %}
+
+{% block content %}
+    <div>
+
+        <a href="/web/ingredient" class="btn btn-lg btn-default" id="link-create-ingredient">Create ingredient</a>
+
+        <div class="list-group">
+            <div class="list-group-item active">Ingredients</div>
+            {% for ingredient in ingredients %}
+                <div class="list-group-item">{{ ingredient.name }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Menu planning</title>
+    <link rel="manifest" href="/web/manifest.json">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group" id="base-dropdown">
+                        <button type="button" class="btn btn-lg btn-default dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-align-justify"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="/web">Current menus</a></li>
+                            <li><a href="/web/favourites">Favourite menus</a></li>
+                            <li><a href="/web/all-menus">All menus</a></li>
+                            <li><a href="/web/create-menu">Create menu</a></li>
+                            <li><a href="/web/foods">Show foods</a></li>
+                            <li><a href="/web/create-food">Create food</a></li>
+                            <li><a href="/web/ingredients">Show ingredients</a></li>
+                            <li><a href="/web/ingredient">Create ingredient</a></li>
+                            <li><a href="/web/grocery-list">Grocery list</a></li>
+                        </ul>
+                    </div>
+                    <h5 class="text-center">{% block sectionTitle %}{% endblock %}</h5>
+                </div>
+                <div class="panel-body">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

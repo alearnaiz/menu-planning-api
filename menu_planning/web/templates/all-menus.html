@@ -1,0 +1,14 @@
+{% extends "utils/base.html" %}
+
+{% block sectionTitle %}All menus{% endblock %}
+
+{% block content %}
+    {% for menu in menus %}
+        <div class="multi-menu">
+            {% with menu=menu %}
+                {% include "utils/menu.html" %}
+            {% endwith %}
+            <a href="/web/menu/{{ menu.id }}" class="btn btn-lg btn-success">Show</a>
+        </div>
+    {% endfor %}
+{% endblock %}

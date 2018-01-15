@@ -1,0 +1,72 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/grocery-list.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Grocery list{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/error-panel.html" %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name *</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr data-id="{{ product.id }}">
+                        <td>
+                            <input type="text" class="name form-control" value="{{ product.name }}">
+                        </td>
+                        <td>
+                            {% if product.quantity %}
+                                <input type="number" class="quantity form-control" value="{{ product.quantity }}">
+                            {% else %}
+                                <input type="number" class="quantity form-control">
+                            {% endif %}
+                        </td>
+                        <td>
+                           <select class="status form-control">
+                                <option value="0"
+                                        {% if product.status == 0 %}
+                                            selected
+                                        {% endif %}
+                                >
+                                    Active
+                                </option>
+                               <option value="1"
+                                        {% if product.status == 1 %}
+                                            selected
+                                        {% endif %}
+                                >
+                                   Bought
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-xs btn-warning " onclick="updateProduct({{ product.id }})">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                            <button type="button" class="btn btn-xs btn-danger " onclick="deleteProduct({{ product.id }})">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button class="btn btn-lg btn-default" id="add-product">Add product</button>
+
+        <button class="btn btn-lg btn-danger" id="delete-all">Clear grocery list</button>
+    </div>
+
+{% endblock %}

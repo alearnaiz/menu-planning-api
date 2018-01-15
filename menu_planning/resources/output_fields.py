@@ -5,6 +5,12 @@ class DatetimeFormat(fields.Raw):
     def format(self, value):
         return value.strftime('%Y-%m-%d %H:%M:%S')
 
+
+class DateFormat(fields.Raw):
+    def format(self, value):
+        return value.strftime('%Y-%m-%d')
+
+
 starter_fields = {
     'id': fields.Integer,
     'name': fields.String(attribute='food.name'),
@@ -16,6 +22,7 @@ dinner_fields = {
     'name': fields.String(attribute='food.name'),
     'url': fields.String(attribute='food.url', default=None),
     'days': fields.Integer,
+    'related_lunch_id': fields.Integer(attribute='related_lunch.id', default=None)
 }
 
 lunch_fields = {
@@ -29,7 +36,7 @@ lunch_fields = {
 
 daily_menu_fields = {
     'id': fields.Integer,
-    'day': DatetimeFormat(),
+    'day': DateFormat(),
     'starter': fields.Nested(starter_fields, allow_null=True),
     'lunch': fields.Nested(lunch_fields, allow_null=True),
     'dinner': fields.Nested(dinner_fields, allow_null=True),
@@ -62,6 +69,7 @@ food_with_ingredients_fields = {
     'id': fields.Integer,
     'name': fields.String,
     'url': fields.String(default=None),
+    'type': fields.Integer,
     'ingredients': fields.Nested(food_ingredient_fields),
 }
 

@@ -1,0 +1,21 @@
+{
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Menu planning",
+    "scope": "/web",
+    "display": "standalone",
+    "start_url": "http://alearnaiz.pythonanywhere.com/web",
+    "short_name": "Menu planning",
+    "theme_color": "white",
+    "description": "",
+    "orientation": "any",
+    "background_color": "white",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/web/manifest/icon.png",
+            "sizes": "397x325"
+        }
+    ]
+}

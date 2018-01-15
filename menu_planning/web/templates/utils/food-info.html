@@ -1,0 +1,24 @@
+<ul class="list-group">
+    {% if food.type == 0 %}
+        <li class="list-group-item active">Starter</li>
+    {% elif food.type == 1 %}
+        <li class="list-group-item active">Lunch</li>
+    {% elif food.type == 2 %}
+        <li class="list-group-item active">Dinner</li>
+    {% endif %}
+
+    {% if food.url %}
+        <li class="list-group-item"><a href="{{ food.url }}" class="btn btn-lg btn-default">Recipe</a></li>
+    {% endif %}
+    {% if lunch %}
+        <li class="list-group-item">{{ lunch.days }} days</li>
+        {% if lunch.need_starter %}
+            <li class="list-group-item">Need starter</li>
+        {% endif %}
+    {% elif dinner %}
+        <li class="list-group-item">{{ dinner.days }} days</li>
+    {% endif %}
+    {% if related %}
+        <li class="list-group-item">Related: <a href="/web/food/{{ related.id }}" class="btn btn-lg btn-default">{{ related.name }}</a></li>
+    {% endif %}
+</ul>

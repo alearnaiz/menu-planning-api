@@ -1,0 +1,99 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/edit-menu.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Edit menu{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/error-panel.html" %}
+
+        {% if menu.name %}
+            <b>Name: {{ menu.name }}</b>
+        {% endif %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Starter</th>
+                    <th scope="col">Lunch</th>
+                    <th scope="col">Dinner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for daily_menu in menu.daily_menus %}
+                    <tr class="daily-menu" data-id="{{ daily_menu.id }}">
+                        <td>{{ daily_menu.day }}</td>
+                        <td>
+                            <select class="starter form-control">
+                                <option value="">---</option>
+                                {% for starter in starters  %}
+                                    <option value="{{ starter.id }}"
+                                            {% if daily_menu.starter and daily_menu.starter.id == starter.id %}
+                                                selected
+                                            {% endif %}
+                                    >
+                                        {{ starter.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="lunch form-control">
+                                <option value="">---</option>
+                                {% for lunch in lunches  %}
+                                    <option value="{{ lunch.id }}"
+                                            {% if daily_menu.lunch and daily_menu.lunch.id == lunch.id %}
+                                                selected
+                                            {% endif %}
+                                    >
+                                        {{ lunch.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select class="dinner form-control">
+                                <option value="">---</option>
+                                {% for dinner in dinners  %}
+                                    <option value="{{ dinner.id }}"
+                                            {% if daily_menu.dinner and daily_menu.dinner.id == dinner.id %}
+                                                selected
+                                            {% endif %}
+                                    >
+                                        {{ dinner.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            {% if menu.name %}
+                <input type="text" class="form-control" id="name" value="{{ menu.name }}">
+            {% else %}
+                <input type="text" class="form-control" id="name">
+            {% endif %}
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="favourite"
+                    {% if menu.favourite %} checked {% endif %}
+                > Favourite?
+            </label>
+        </div>
+
+        <input type="hidden" id="menu-id" value="{{ menu.id }}">
+
+        <button class="btn btn-lg btn-default" id="edit-menu">Save</button>
+    </div>
+
+{% endblock %}

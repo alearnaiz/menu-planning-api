@@ -1,0 +1,50 @@
+{% if menu.name %}
+    <b>Name: {{ menu.name }}</b>
+{% endif %}
+
+{% if menu.favourite %}
+    <span class="glyphicon glyphicon-star-empty"></span>
+{% endif %}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Day</th>
+            <th scope="col">Starter</th>
+            <th scope="col">Lunch</th>
+            <th scope="col">Dinner</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for daily_menu in menu.daily_menus %}
+            <tr>
+                <td>
+                    {{ daily_menu.day }}
+                </td>
+                <td>
+                    {% if daily_menu.starter %}
+                        {{ daily_menu.starter.name }}
+                    {% else %}
+                        ---
+                    {% endif %}
+                </td>
+                <td>
+                    {% if daily_menu.lunch %}
+                        {{ daily_menu.lunch.name }}
+                    {% else %}
+                        ---
+                    {% endif %}
+                </td>
+                <td>
+                    {% if daily_menu.dinner %}
+                        {{ daily_menu.dinner.name }}
+                    {% else %}
+                        ---
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="/web/edit-menu/{{ menu.id }}" class="btn btn-lg btn-info">Edit</a>

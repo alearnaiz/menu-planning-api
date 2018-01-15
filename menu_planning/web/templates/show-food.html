@@ -1,0 +1,36 @@
+{% extends "utils/base.html" %}
+
+{% block sectionTitle %}{{ food.name }}{% endblock %}
+
+{% block content %}
+    <div>
+
+        {% include "utils/food-info.html" %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient in food.ingredients %}
+                    <tr>
+                        <td>{{ ingredient.name }}</td>
+                        <td>
+                            {% if ingredient.quantity %}
+                                {{ ingredient.quantity }}
+                            {% else %}
+                                ---
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/web/food/{{ food.id }}/ingredients" class="btn btn-lg btn-info">Edit</a>
+
+{% endblock %}

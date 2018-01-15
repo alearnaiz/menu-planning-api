@@ -24,3 +24,9 @@ import menu_planning.resources.starter_api
 import menu_planning.resources.lunch_api
 import menu_planning.resources.dinner_api
 import menu_planning.resources.food_ingredient_api
+
+
+# Web version
+import menu_planning.web.routes
+app.static_folder = 'web/static'
+app.template_folder = 'web/templates'

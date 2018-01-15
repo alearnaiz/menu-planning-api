@@ -46,7 +46,7 @@ class DailyMenuSchema(Schema):
 class MenuSchema(Schema):
     id = fields.Int(required=True)
     name = fields.Str(required=True, allow_none=True)
-    favourite = fields.Bool(required=True)
+    favourite = fields.Bool(required=True, allow_none=True)
     daily_menus = fields.Nested(DailyMenuSchema, many=True,
                                 validate=validate.Length(min=1, error='Field may not be an empty list'))
 

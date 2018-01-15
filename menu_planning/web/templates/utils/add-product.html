@@ -1,0 +1,26 @@
+<tr>
+    <td>
+        <input type="text" class="name form-control">
+    </td>
+    <td>
+        <input type="number" class="quantity form-control">
+    </td>
+    <td>
+        <select class="status form-control">
+            <option value="0">
+                Active
+            </option>
+           <option value="1">
+               Bought
+            </option>
+        </select>
+    </td>
+    <td>
+        <button type="button" class="btn btn-xs btn-warning " onclick="addProduct(this);">
+            <span class="glyphicon glyphicon-ok"></span>
+        </button>
+        <button type="button" class="btn btn-xs btn-danger " onclick="$(this).closest('tr').remove();">
+            <span class="glyphicon glyphicon-remove"></span>
+        </button>
+    </td>
+</tr>
