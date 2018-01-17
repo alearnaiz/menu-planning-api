@@ -35,7 +35,7 @@ $(function() {
             data: JSON.stringify(data),
             dataType: "json"
         }).done(function(menu) {
-            window.location.href = "/web/edit-menu/"+menu.id
+            window.location.href = "/web/edit-menu/"+menu.id;
         }).fail(function() {
             $("#error-panel").removeClass("hidden");
         });

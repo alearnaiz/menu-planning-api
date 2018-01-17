@@ -5,6 +5,8 @@ $(function() {
         var menuId = $("#menu-id").val();
 
         var data = {
+            favourite: $("#favourite").prop('checked'),
+            name: getValueOrNull($("#name").val()),
             daily_menus: []
         };
 
@@ -33,21 +35,18 @@ $(function() {
 
             var dinner = null;
             if (isNotEmpty(dinnerId)) {
-                dinner: {
+                dinner = {
                     id: dinnerId
                 };
             }
 
             data.daily_menus.push({
                 id: id,
-                name: getValueOrNull($("#name").val()),
                 starter: starter,
                 lunch: lunch,
                 dinner: dinner
             });
         }
-
-        data['favourite'] = $("#favourite").prop('checked');
 
         $.ajax({
             method: "PUT",
@@ -56,7 +55,7 @@ $(function() {
             data: JSON.stringify(data),
             dataType: "json"
         }).done(function() {
-            window.location.href = "/web/menu/"+menuId
+            window.location.href = "/web/menu/"+menuId;
         }).fail(function() {
             $("#error-panel").removeClass("hidden");
         });

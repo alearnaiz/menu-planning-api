@@ -14,7 +14,7 @@ $(function() {
             data: JSON.stringify(data),
             dataType: "json"
         }).done(function(food) {
-            window.location.href = "/web/food/"+food.id+"/ingredients"
+            window.location.href = "/web/food/"+food.id+"/ingredients";
         }).fail(function() {
             $("#error-panel").removeClass("hidden");
         });

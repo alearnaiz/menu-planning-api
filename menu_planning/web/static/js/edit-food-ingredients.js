@@ -32,7 +32,7 @@ $(function() {
             data: JSON.stringify(data),
             dataType: "json"
         }).done(function() {
-            window.location.href = "/web/food/"+foodId
+            window.location.href = "/web/food/"+foodId;
         }).fail(function() {
             $("#error-panel").removeClass("hidden");
         });
