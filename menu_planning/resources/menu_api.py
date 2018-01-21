@@ -106,6 +106,16 @@ class CurrentMenuListApi(Resource):
 api.add_resource(CurrentMenuListApi, '/menus/current')
 
 
+class NextMenuListApi(Resource):
+
+    @marshal_with(menu_fields)
+    def get(self):
+        menu_service = MenuService()
+        return menu_service.get_next(date.today())
+
+api.add_resource(NextMenuListApi, '/menus/next')
+
+
 def check_menu(menu_id, menu_service=MenuService()):
     menu = menu_service.get_by_id(menu_id)
 

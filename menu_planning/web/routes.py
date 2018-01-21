@@ -15,6 +15,17 @@ def current_menus():
     return render_template('current-menus.html', menus=menus)
 
 
+@app.route('/web/next', methods=['GET'])
+def next_menus():
+    menu_list = menu_api.NextMenuListApi().get()
+
+    menus = list()
+    for menu in menu_list:
+        menus.append(menu_api.MenuApi().get(menu['id']))
+
+    return render_template('next-menus.html', menus=menus)
+
+
 @app.route('/web/favourites', methods=['GET'])
 def favourite_menus():
     menu_list = menu_api.FavouriteMenuListApi().get()

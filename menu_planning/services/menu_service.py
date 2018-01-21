@@ -23,6 +23,11 @@ class MenuService:
         daily_menu_query = DailyMenu.query.filter(DailyMenu.day == date, DailyMenu.menu_id == Menu.id)
         return Menu.query.filter(daily_menu_query.exists()).all()
 
+    def get_next(self, date):
+        current_daily_menu_query = DailyMenu.query.filter(DailyMenu.day == date, DailyMenu.menu_id == Menu.id)
+        next_daily_menu_query = DailyMenu.query.filter(DailyMenu.day > date, DailyMenu.menu_id == Menu.id)
+        return Menu.query.filter(~current_daily_menu_query.exists()).filter(next_daily_menu_query.exists()).all()
+
     def update(self, id, name=None, favourite=False):
         menu = self.get_by_id(id)
         menu.name = name

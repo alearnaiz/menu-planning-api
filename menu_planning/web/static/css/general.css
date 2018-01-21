@@ -1,28 +1,23 @@
-.side-bar {
-    margin-bottom: 20px;
-}
-
-#link-create-ingredient {
-    margin-bottom: 2%;
-}
-
 #base-dropdown {
     float: left;
 }
 
 .multi-menu {
-    margin-bottom: 7%;
+    margin-bottom: 15px;
 }
 
 #send-products {
-    margin-top: 5%;
+    margin-top: 10px;
 }
 
-#add-product {
-    margin-bottom: 5%;
+#add-product, #link-create-ingredient {
+    margin-bottom: 10px;
 }
 
 .dropdown-menu li a {
-    padding: 20px;
-    text-align: center;
+    padding: 15px;
+}
+
+#current-menus, #next-menus {
+    margin-bottom: 25px;
 }

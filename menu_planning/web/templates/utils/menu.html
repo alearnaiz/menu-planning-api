@@ -23,21 +23,21 @@
                 </td>
                 <td>
                     {% if daily_menu.starter %}
-                        {{ daily_menu.starter.name }}
+                        <a href="/web/food/{{ daily_menu.starter.id }}">{{ daily_menu.starter.name }}</a>
                     {% else %}
                         ---
                     {% endif %}
                 </td>
                 <td>
                     {% if daily_menu.lunch %}
-                        {{ daily_menu.lunch.name }}
+                        <a href="/web/food/{{ daily_menu.lunch.id }}">{{ daily_menu.lunch.name }}</a>
                     {% else %}
                         ---
                     {% endif %}
                 </td>
                 <td>
                     {% if daily_menu.dinner %}
-                        {{ daily_menu.dinner.name }}
+                        <a href="/web/food/{{ daily_menu.dinner.id }}">{{ daily_menu.dinner.name }}</a>
                     {% else %}
                         ---
                     {% endif %}
