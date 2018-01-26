@@ -8,7 +8,7 @@
     {% endif %}
 
     {% if food.url %}
-        <li class="list-group-item"><a href="{{ food.url }}" class="btn btn-lg btn-default">Recipe</a></li>
+        <li class="list-group-item"><a href="{{ food.url }}" target="blank">Recipe</a></li>
     {% endif %}
     {% if lunch %}
         <li class="list-group-item">{{ lunch.days }} days</li>
@@ -19,6 +19,6 @@
         <li class="list-group-item">{{ dinner.days }} days</li>
     {% endif %}
     {% if related %}
-        <li class="list-group-item">Related: <a href="/web/food/{{ related.id }}" class="btn btn-lg btn-default">{{ related.name }}</a></li>
+        <li class="list-group-item">Related: <a href="/web/food/{{ related.id }}">{{ related.name }}</a></li>
     {% endif %}
 </ul>

@@ -69,9 +69,9 @@ def edit_menu(menu_id):
     if request.method == 'GET':
         menu = menu_api.MenuApi().get(menu_id)
 
-        starters = starter_api.StarterListApi().get()
-        dinners = dinner_api.DinnerListApi().get()
-        lunches = lunch_api.LunchListApi().get()
+        starters = sorted(starter_api.StarterListApi().get(), key=sorted_by_name)
+        dinners = sorted(dinner_api.DinnerListApi().get(), key=sorted_by_name)
+        lunches = sorted(lunch_api.LunchListApi().get(), key=sorted_by_name)
 
         return render_template('edit-menu.html', menu=menu, starters=starters, dinners=dinners, lunches=lunches)
     else:
@@ -81,7 +81,7 @@ def edit_menu(menu_id):
 
 @app.route('/web/foods', methods=['GET'])
 def show_foods():
-    foods = food_api.FoodListApi().get()
+    foods = sorted(food_api.FoodListApi().get(), key=sorted_by_name)
     starters = []
     lunches = []
     dinners = []
@@ -126,7 +126,7 @@ def create_ingredient():
 
 @app.route('/web/ingredients', methods=['GET'])
 def show_ingredients():
-    ingredients = ingredient_api.IngredientListApi().get()
+    ingredients = sorted(ingredient_api.IngredientListApi().get(), key=sorted_by_name)
     return render_template('ingredients.html', ingredients=ingredients)
 
 
@@ -146,7 +146,7 @@ def edit_food_ingredients(food_id):
             if dinner["related_lunch_id"]:
                 related = food_api.FoodApi().get(dinner["related_lunch_id"])
 
-        ingredients = ingredient_api.IngredientListApi().get()
+        ingredients = sorted(ingredient_api.IngredientListApi().get(), key=sorted_by_name)
         return render_template('edit-food-ingredients.html', food=food, ingredients=ingredients, lunch=lunch, dinner=dinner, related=related)
     else:
         response = food_ingredient_api.FoodIngredientListApi().put(food_id)
@@ -155,7 +155,7 @@ def edit_food_ingredients(food_id):
 
 @app.route('/web/template-ingredient', methods=['GET'])
 def get_template_add_ingredient():
-    ingredients = ingredient_api.IngredientListApi().get()
+    ingredients = sorted(ingredient_api.IngredientListApi().get(), key=sorted_by_name)
     return render_template('utils/add-ingredient.html', ingredients=ingredients)
 
 
@@ -176,7 +176,7 @@ def create_start():
 @app.route('/web/create-lunch', methods=['GET', 'POST'])
 def create_lunch():
     if request.method == 'GET':
-        dinners = dinner_api.DinnerListApi().get()
+        dinners = sorted(dinner_api.DinnerListApi().get(), key=sorted_by_name)
         return render_template('create-lunch.html', dinners=dinners)
     else:
         response = lunch_api.LunchListApi().post()
@@ -234,3 +234,7 @@ def get_manifest():
 @app.route('/web/manifest/icon.png')
 def get_manifest_icon():
     return send_from_directory('web/manifest', 'icon.png')
+
+
+def sorted_by_name(custom):
+    return custom["name"].lower()
