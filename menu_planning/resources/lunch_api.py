@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, marshal_with, abort
 
 from menu_planning.models.schemas import lunch_schema, parser_request
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.resources.output_fields import lunch_fields
 from menu_planning import api
 from menu_planning.models import FoodType
@@ -11,11 +12,13 @@ from menu_planning.services.lunch_service import LunchService
 
 class LunchListApi(Resource):
 
+    @login_required
     @marshal_with(lunch_fields)
     def get(self):
         lunch_service = LunchService()
         return lunch_service.get_all()
 
+    @login_required
     @marshal_with(lunch_fields)
     def post(self):
         # Request
@@ -38,6 +41,7 @@ api.add_resource(LunchListApi, '/lunches')
 
 class LunchApi(Resource):
 
+    @login_required
     @marshal_with(lunch_fields)
     def get(self, lunch_id):
         return check_lunch(lunch_id)

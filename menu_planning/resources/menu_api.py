@@ -5,6 +5,7 @@ from flask_restful import Resource, marshal_with, abort, request
 from menu_planning import api
 from menu_planning.actions.menu_generator import MenuGenerator
 from menu_planning.models.schemas import parser_request, menu_with_daily_menus_schema, create_menu_schema
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.resources.output_fields import menu_fields, menu_with_daily_menus_fields
 from menu_planning.services.daily_menu_service import DailyMenuService
 from menu_planning.services.menu_service import MenuService
@@ -12,11 +13,13 @@ from menu_planning.services.menu_service import MenuService
 
 class MenuListApi(Resource):
 
+    @login_required
     @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()
         return menu_service.get_all()
 
+    @login_required
     @marshal_with(menu_fields)
     def post(self):
         # Request
@@ -55,10 +58,12 @@ api.add_resource(MenuListApi, '/menus')
 
 class MenuApi(Resource):
 
+    @login_required
     @marshal_with(menu_with_daily_menus_fields)
     def get(self, menu_id):
         return check_menu(menu_id)
 
+    @login_required
     def put(self, menu_id):
         menu_service = MenuService()
         check_menu(menu_id, menu_service)
@@ -88,6 +93,7 @@ api.add_resource(MenuApi, '/menus/<int:menu_id>')
 
 class FavouriteMenuListApi(Resource):
 
+    @login_required
     @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()
@@ -98,6 +104,7 @@ api.add_resource(FavouriteMenuListApi, '/menus/favourite')
 
 class CurrentMenuListApi(Resource):
 
+    @login_required
     @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()
@@ -108,6 +115,7 @@ api.add_resource(CurrentMenuListApi, '/menus/current')
 
 class NextMenuListApi(Resource):
 
+    @login_required
     @marshal_with(menu_fields)
     def get(self):
         menu_service = MenuService()

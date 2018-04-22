@@ -4,12 +4,14 @@ from menu_planning import api
 from flask_restful import Resource, abort
 
 from menu_planning.models.schemas import parser_request, food_ingredient_schema
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.food_service import FoodService
 
 
 class FoodIngredientListApi(Resource):
 
+    @login_required
     def put(self, food_id):
         check_food(food_id)
 

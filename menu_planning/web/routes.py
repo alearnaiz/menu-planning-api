@@ -1,10 +1,30 @@
-from flask import render_template, request, jsonify, send_from_directory
+from functools import wraps
 
+from flask import render_template, request, jsonify, send_from_directory, redirect, url_for
 from menu_planning import app
 from menu_planning.resources import menu_api, starter_api, dinner_api, lunch_api, food_api, food_ingredient_api, ingredient_api, product_api
+from menu_planning.services.user_service import UserService
+
+
+def login_web_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not get_user():
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/web', methods=['GET'])
+def login():
+    if not get_user():
+        return render_template('login.html')
+
+    return redirect(url_for("current_menus"))
+
+
+@app.route('/web/current-menus', methods=['GET'])
+@login_web_required
 def current_menus():
     menu_list = menu_api.CurrentMenuListApi().get()
 
@@ -16,6 +36,7 @@ def current_menus():
 
 
 @app.route('/web/next', methods=['GET'])
+@login_web_required
 def next_menus():
     menu_list = menu_api.NextMenuListApi().get()
 
@@ -27,6 +48,7 @@ def next_menus():
 
 
 @app.route('/web/favourites', methods=['GET'])
+@login_web_required
 def favourite_menus():
     menu_list = menu_api.FavouriteMenuListApi().get()
 
@@ -38,6 +60,7 @@ def favourite_menus():
 
 
 @app.route('/web/all-menus', methods=['GET'])
+@login_web_required
 def all_menus():
     menu_list = menu_api.MenuListApi().get()
 
@@ -49,6 +72,7 @@ def all_menus():
 
 
 @app.route('/web/menu/<int:menu_id>', methods=['GET'])
+@login_web_required
 def show_menu(menu_id):
     menu = menu_api.MenuApi().get(menu_id)
 
@@ -56,6 +80,7 @@ def show_menu(menu_id):
 
 
 @app.route('/web/create-menu', methods=['GET', 'POST'])
+@login_web_required
 def create_menu():
     if request.method == 'GET':
         return render_template('create-menu.html')
@@ -65,6 +90,7 @@ def create_menu():
 
 
 @app.route('/web/edit-menu/<int:menu_id>', methods=['GET', 'PUT'])
+@login_web_required
 def edit_menu(menu_id):
     if request.method == 'GET':
         menu = menu_api.MenuApi().get(menu_id)
@@ -80,6 +106,7 @@ def edit_menu(menu_id):
 
 
 @app.route('/web/foods', methods=['GET'])
+@login_web_required
 def show_foods():
     foods = sorted(food_api.FoodListApi().get(), key=sorted_by_name)
     starters = []
@@ -98,6 +125,7 @@ def show_foods():
 
 
 @app.route('/web/food/<int:food_id>', methods=['GET'])
+@login_web_required
 def show_food(food_id):
     food = food_api.FoodApi().get(food_id)
     lunch = None
@@ -116,6 +144,7 @@ def show_food(food_id):
 
 
 @app.route('/web/ingredient', methods=['GET', 'POST'])
+@login_web_required
 def create_ingredient():
     if request.method == 'GET':
         return render_template('create-ingredient.html')
@@ -125,12 +154,14 @@ def create_ingredient():
 
 
 @app.route('/web/ingredients', methods=['GET'])
+@login_web_required
 def show_ingredients():
     ingredients = sorted(ingredient_api.IngredientListApi().get(), key=sorted_by_name)
     return render_template('ingredients.html', ingredients=ingredients)
 
 
 @app.route('/web/food/<int:food_id>/ingredients', methods=['GET', 'PUT'])
+@login_web_required
 def edit_food_ingredients(food_id):
     if request.method == 'GET':
         food = food_api.FoodApi().get(food_id)
@@ -154,17 +185,20 @@ def edit_food_ingredients(food_id):
 
 
 @app.route('/web/template-ingredient', methods=['GET'])
+@login_web_required
 def get_template_add_ingredient():
     ingredients = sorted(ingredient_api.IngredientListApi().get(), key=sorted_by_name)
     return render_template('utils/add-ingredient.html', ingredients=ingredients)
 
 
 @app.route('/web/create-food', methods=['GET'])
+@login_web_required
 def create_food():
     return render_template('create-food.html')
 
 
 @app.route('/web/create-starter', methods=['GET', 'POST'])
+@login_web_required
 def create_start():
     if request.method == 'GET':
         return render_template('create-starter.html')
@@ -174,6 +208,7 @@ def create_start():
 
 
 @app.route('/web/create-lunch', methods=['GET', 'POST'])
+@login_web_required
 def create_lunch():
     if request.method == 'GET':
         dinners = sorted(dinner_api.DinnerListApi().get(), key=sorted_by_name)
@@ -184,6 +219,7 @@ def create_lunch():
 
 
 @app.route('/web/create-dinner', methods=['GET', 'POST'])
+@login_web_required
 def create_dinner():
     if request.method == 'GET':
         return render_template('create-dinner.html')
@@ -193,6 +229,7 @@ def create_dinner():
 
 
 @app.route('/web/grocery-list', methods=['GET', 'POST', 'DELETE'])
+@login_web_required
 def my_products():
     if request.method == 'GET':
         products = product_api.ProductListApi().get()
@@ -206,11 +243,13 @@ def my_products():
 
 
 @app.route('/web/template-product', methods=['GET'])
+@login_web_required
 def get_template_add_product():
     return render_template('utils/add-product.html')
 
 
 @app.route('/web/edit-product/<int:product_id>', methods=['PUT', 'DELETE'])
+@login_web_required
 def edit_product(product_id):
     if request.method == 'PUT':
         response = product_api.ProductApi().put(product_id)
@@ -221,6 +260,7 @@ def edit_product(product_id):
 
 
 @app.route('/web/send-products/<int:menu_id>', methods=['GET'])
+@login_web_required
 def send_product_to_grocery_list(menu_id):
     response = product_api.send_ingredients_from_menu_to_grocery_list(menu_id)
     return jsonify(response[0])
@@ -234,6 +274,13 @@ def get_manifest():
 @app.route('/web/manifest/icon.png')
 def get_manifest_icon():
     return send_from_directory('web/manifest', 'icon.png')
+
+
+def get_user():
+    username = request.cookies.get('username')
+    password = request.cookies.get('password')
+    user = UserService.get_user(username, password)
+    return user
 
 
 def sorted_by_name(custom):

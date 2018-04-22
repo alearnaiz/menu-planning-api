@@ -1,6 +1,7 @@
 from flask_restful import Resource, marshal_with, request
 
 from menu_planning.models.schemas import starter_schema, parser_request
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.resources.output_fields import starter_fields
 from menu_planning import api
 from menu_planning.models import FoodType
@@ -10,11 +11,13 @@ from menu_planning.services.starter_service import StarterService
 
 class StarterListApi(Resource):
 
+    @login_required
     @marshal_with(starter_fields)
     def get(self):
         starter_service = StarterService()
         return starter_service.get_all()
 
+    @login_required
     @marshal_with(starter_fields)
     def post(self):
         # Request

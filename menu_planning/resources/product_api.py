@@ -4,6 +4,7 @@ from menu_planning import api, app
 from flask_restful import Resource, abort, marshal_with
 
 from menu_planning.models.schemas import product_schema, parser_request
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.resources.output_fields import product_fields
 from menu_planning.models import Product, ProductStatus
 from menu_planning.services.food_ingredient_service import FoodIngredientService
@@ -14,16 +15,19 @@ from menu_planning.services.product_service import ProductService
 
 class ProductListApi(Resource):
 
+    @login_required
     @marshal_with(product_fields)
     def get(self):
         product_service = ProductService()
         return product_service.get_all()
 
+    @login_required
     def delete(self):
         product_service = ProductService()
         product_service.delete_all()
         return 'Products deleted', 201
 
+    @login_required
     @marshal_with(product_fields)
     def post(self):
         name, quantity, status = check_request()
@@ -39,6 +43,7 @@ api.add_resource(ProductListApi, '/products')
 
 class ProductApi(Resource):
 
+    @login_required
     def put(self, product_id):
         product_service = ProductService()
 
@@ -50,6 +55,7 @@ class ProductApi(Resource):
         product_service.update(product)
         return 'Product {} updated'.format(product_id)
 
+    @login_required
     def delete(self, product_id):
         product_service = ProductService()
 
@@ -61,6 +67,7 @@ class ProductApi(Resource):
 api.add_resource(ProductApi, '/products/<int:product_id>')
 
 
+@login_required
 @app.route('/menus/<int:menu_id>/ingredients/products', methods=['GET'])
 def send_ingredients_from_menu_to_grocery_list(menu_id):
 

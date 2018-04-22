@@ -1,5 +1,7 @@
 from menu_planning import api
 from flask_restful import Resource, marshal_with, abort
+
+from menu_planning.resources.login_decorator import login_required
 from menu_planning.resources.output_fields import foods_fields, food_with_ingredients_fields
 from menu_planning.services.food_ingredient_service import FoodIngredientService
 from menu_planning.services.food_service import FoodService
@@ -8,6 +10,7 @@ from menu_planning.services.ingredient_service import IngredientService
 
 class FoodListApi(Resource):
 
+    @login_required
     @marshal_with(foods_fields)
     def get(self):
         food_service = FoodService()
@@ -18,6 +21,7 @@ api.add_resource(FoodListApi, '/foods')
 
 class FoodApi(Resource):
 
+    @login_required
     @marshal_with(food_with_ingredients_fields)
     def get(self, food_id):
         food = check_food(food_id)

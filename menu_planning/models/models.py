@@ -119,3 +119,8 @@ class Product(db.Model):
         self.name = name
         self.quantity = quantity
         self.status = status
+
+
+class User(db.Model):
+    username = db.Column(db.String(200), primary_key=True)
+    password = db.Column(db.String(200), nullable=False)
