@@ -30,4 +30,5 @@ class StarterListApi(Resource):
 
         return starter, 201
 
+
 api.add_resource(StarterListApi, '/starters')

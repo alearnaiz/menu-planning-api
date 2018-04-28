@@ -68,6 +68,10 @@ class FoodIngredientSchema(Schema):
     quantity = fields.Float(required=True, allow_none=True, validate=validate_quantity)
 
 
+class FoodSchema(Schema):
+    id = fields.Int(required=True)
+
+
 def parser_request(request, schema):
     json_data = request.get_json()
     if not json_data:
@@ -92,3 +96,4 @@ dinner_schema = DinnerSchema(exclude=('id',))
 ingredient_schema = IngredientSchema(exclude=('id',))
 product_schema = ProductSchema(exclude=('id',))
 food_ingredient_schema = FoodIngredientSchema(many=True, only=('quantity', 'ingredient.id'))
+food_schema = FoodSchema(many=True)

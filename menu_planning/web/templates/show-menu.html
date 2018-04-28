@@ -1,20 +1,13 @@
 {% extends "utils/base.html" %}
 
-{% block head %}
-    <script type="text/javascript" src="{{ url_for('static', filename='js/show-menu.js') }}"></script>
-{% endblock %}
-
 {% block sectionTitle %}Menu{% endblock %}
 
 {% block content %}
     <div>
-
-        {% include "utils/error-panel.html" %}
-
         {% include "utils/menu.html" %}
 
         <input type="hidden" id="menu-id" value="{{ menu.id }}">
 
-        <button class="btn btn-lg btn-default" id="send-products">Send products to grocery list</button>
+        <a class="btn btn-lg btn-default" href="/web/send-foods-to-grocery-list/{{ menu.id }}">Send foods to grocery list</a>
     </div>
 {% endblock %}

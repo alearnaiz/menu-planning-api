@@ -1,0 +1,28 @@
+{% extends "utils/base.html" %}
+
+{% block head %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/send-foods-to-grocery-list.js') }}"></script>
+{% endblock %}
+
+{% block sectionTitle %}Send foods to grocery list{% endblock %}
+
+{% block content %}
+
+    {% include "utils/error-panel.html" %}
+
+    <ul class="list-group">
+        {% for food in foods %}
+            <li class="list-group-item">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checked class="food" value="{{ food.id }}"> {{ food.name }}
+                    </label>
+                 </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <input type="hidden" id="menu-id" value="{{ menu_id }}">
+
+    <button class="btn btn-lg btn-warning" id="send-foods">Send foods</button>
+{% endblock %}

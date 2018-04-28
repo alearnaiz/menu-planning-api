@@ -1,17 +1,17 @@
 from flask import request
 
 from menu_planning import api
-from flask_restful import Resource, abort
+from flask_restful import Resource
 
 from menu_planning.models.schemas import parser_request, food_ingredient_schema
+from menu_planning.resources.validator import Validator
 from menu_planning.services.food_ingredient_service import FoodIngredientService
-from menu_planning.services.food_service import FoodService
 
 
 class FoodIngredientListApi(Resource):
 
     def put(self, food_id):
-        check_food(food_id)
+        Validator.check_food(food_id)
 
         # Request
         parser = parser_request(request, food_ingredient_schema)
@@ -25,12 +25,5 @@ class FoodIngredientListApi(Resource):
 
         return 'Ingredients for the food {} updated'.format(food_id)
 
+
 api.add_resource(FoodIngredientListApi, '/foods/<int:food_id>/ingredients')
-
-
-def check_food(food_id, food_service=FoodService()):
-    food = food_service.get_by_id(id=food_id)
-    if not food:
-        abort(404, error='Food {} does not exist'.format(food_id))
-
-    return food

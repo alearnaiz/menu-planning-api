@@ -25,4 +25,5 @@ class IngredientListApi(Resource):
         ingredient = ingredient_service.create(name=name)
         return ingredient, 201
 
+
 api.add_resource(IngredientListApi, '/ingredients')

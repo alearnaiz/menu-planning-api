@@ -1,4 +1,4 @@
-from sqlalchemy.sql.expression import func, text
+from sqlalchemy.sql.expression import func
 from menu_planning.models import Dinner, DailyMenu, db
 
 

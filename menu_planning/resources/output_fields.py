@@ -52,7 +52,7 @@ menu_fields = {
 menu_with_daily_menus_fields = menu_fields.copy()
 menu_with_daily_menus_fields['daily_menus'] = fields.List(fields.Nested(daily_menu_fields))
 
-foods_fields = {
+food_fields = {
     'id': fields.Integer,
     'name': fields.String,
     'url': fields.String(default=None),

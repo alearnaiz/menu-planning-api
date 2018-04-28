@@ -220,10 +220,14 @@ def edit_product(product_id):
         return jsonify(response[0])
 
 
-@app.route('/web/send-products/<int:menu_id>', methods=['GET'])
-def send_product_to_grocery_list(menu_id):
-    response = product_api.send_ingredients_from_menu_to_grocery_list(menu_id)
-    return jsonify(response[0])
+@app.route('/web/send-foods-to-grocery-list/<int:menu_id>', methods=['GET', 'POST'])
+def send_foods_to_grocery_list(menu_id):
+    if request.method == 'GET':
+        foods = food_api.FoodMenuApi().get(menu_id)
+        return render_template('send-foods-to-grocery-list.html', foods=foods, menu_id=menu_id)
+    else:
+        response = product_api.send_ingredients_from_foods_to_grocery_list()
+        return jsonify(response[0])
 
 
 @app.route('/web/manifest.json')
